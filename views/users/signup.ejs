@@ -1,0 +1,149 @@
+<%- include('../layouts/header.ejs') %>
+<section class="" style="background-color: rgb(141, 183, 143); overflow: hidden;" >
+  <div class="container py-5 h-100">
+    <div>
+      <img class="ms-5" src="/userImages/logo.png">
+    </div>
+    <div class="row d-flex align-items-center justify-content-center mt-5 h-100" style="width: 80%; margin-left: auto; margin-right: auto; background-color: aliceblue; padding: inherit;">
+      <div class="col-md-8 col-lg-7 col-xl-6 d-grid justify-content-end " style="margin-bottom: 12vh;" >
+        <img src="/userImages/istockphoto-692909922-612x612.jpg"
+          class="img-fluid" alt="Phone image">
+      </div>
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 ms-5">
+       <form class="mx-1 mx-md-4" action='/signup' method="post">
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                   
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="text" name="username" id="form3Example1c" class="form-control " placeholder="User Name" />
+                     
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="email" name="email" id="form3Example3c" class="form-control mt-3" placeholder="Email Address" />
+                    
+                    </div>
+                  </div>
+
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="mobile" name="phone" id="form3Example3c" class="form-control mt-3" placeholder="Mobile Number" />
+                     
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="password" name="password" id="form3Example4c" class="form-control mt-3" placeholder="Password" />
+                     
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="password" name="Rpassword" id="form3Example4cd" class="form-control mt-3" placeholder="Repeat your password" />
+                    
+                    </div>
+                  </div>
+
+                  <div>
+                    <% if(typeof message!='undefined'||typeof msg!='undefined'){
+                        %>
+                        <small class="text-success"><%= message %></small>
+                        <small class="text-danger"><%= msg %></small>
+                        <%
+                    } 
+                    %>
+                   
+                  </div>
+
+
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button type="submit" class="btn btn-primary btn-lg mt-3">Register</button>
+                  </div>
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <a href="http://localhost:3000/login">Already have account</a>
+                    </div>
+
+                </form>
+               
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<style>
+.bgstyle{
+  background-color: lightgray;
+}</style>
+<%- include('../layouts/footer.ejs')%>
+<script>
+  const form = document.querySelector('form');
+  const usernameInput = document.querySelector('input[name="username"]');
+  const emailInput = document.querySelector('input[name="email"]');
+  const phoneInput = document.querySelector('input[name="phone"]');
+  const passwordInput = document.querySelector('input[name="password"]');
+  const rpasswordInput = document.querySelector('input[name="Rpassword"]');
+  const errorDiv = document.querySelector('#error');
+
+  form.addEventListener('submit', (event) => {
+    let isValid = true;
+    errorDiv.innerHTML = '';
+
+    if (!usernameInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Please enter a username.';
+      errorDiv.appendChild(error);
+    }
+
+    if (!emailInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Please enter an email address.';
+      errorDiv.appendChild(error);
+    }
+
+    if (!phoneInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Please enter a phone number.';
+      errorDiv.appendChild(error);
+    }
+
+    if (!passwordInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Please enter a password.';
+      errorDiv.appendChild(error);
+    }
+
+    if (!rpasswordInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Please repeat your password.';
+      errorDiv.appendChild(error);
+    }
+
+    if (passwordInput.value !== rpasswordInput.value) {
+      isValid = false;
+      const error = document.createElement('div');
+      error.innerText = 'Passwords do not match.';
+      errorDiv.appendChild(error);
+    }
+
+    if (!isValid) {
+      event.preventDefault();
+    }
+  });
+</script>
+
+<div id="error"></div>

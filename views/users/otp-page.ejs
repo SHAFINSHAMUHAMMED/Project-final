@@ -1,0 +1,46 @@
+<%- include('../layouts/header.ejs') %>
+<!-- Page Preloder -->
+<div id="preloder">
+  <div class="loader"></div>
+</div>
+<section class="vh-100 bg">
+  <div class="container-xl h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div>
+          <div class="p-5 text-center">
+
+            <h3 class="mb-5 text-white">Enter OTP sent to your Email</h3>
+
+        <form action="/otpSubmit" method="post">
+             <div class="form-outline mb-5">
+              <input name="otp" type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="OTP" />
+              <% if(typeof message!='undefined'||typeof msg!='undefined'){
+                %>
+                <small class="text-success"><%= message %></small>
+                <small class="text-danger"><%= msg %></small>
+                <%
+             } 
+                %>
+            </div>
+
+            <div class="d-grid gap-2 col-6 mx-auto mb-4">
+                <button class="btn btn-secondary" type="submit">Submit</button>
+            </div>
+
+        </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.bg{
+  background-image:url(/img/otp\ log.jpg);
+}
+</style>
+  
+<%- include('../layouts/footer.ejs') %>

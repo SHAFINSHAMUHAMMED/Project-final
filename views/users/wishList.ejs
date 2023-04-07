@@ -1,0 +1,100 @@
+<%- include('../layouts/header.ejs') %>
+    <%- include('../layouts/commonhead.ejs',{session}) %>
+        <!-- Page Preloder -->
+        <div id="preloder">
+            <div class="loader"></div>
+        </div>
+
+        <section class="shopping-cart spad">
+            <div class="mb-3 d-flex justify-content-center me-5">
+                <h3 class="" style="font-weight: 600;">WishList</h3>
+            </div>
+            <div class="container ">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 row justify-content-center" style="background-color: hsla(0, 0%, 87%, 0.99);">
+                        <div class="shopping__cart__table col-auto">
+                            <table class="table table-responsive">
+
+                                <tbody>
+                                    <% if (wishlist==undefined) { %>
+                                        <% } else { %>
+                                            <% if(wishlist.length==0) {%>
+                                                <img src="https://shopperswarehouse.com/assets/e_website/assets/site_image/empty_wishlist.png"
+                                                    alt="">
+                                                <% } %>
+                                                    <% let totalPrice=0 %>
+                                                        <% for (let i=0; i < wishlist.length; i++) { %>
+                                                            <% const item=wishlist[i] %>
+                                                                <tr>
+                                                                    <td class="product__cart__item">
+                                                                        <div class="product__cart__item__pic">
+                                                                            <img width="40px" height="60px"
+                                                                                src="/proImage/<%=item.image[0]%>"
+                                                                                alt="">
+                                                                        </div>
+                                                                        <div class="product__cart__item__text">
+                                                                            <h6>
+                                                                                <%=item.title%>
+                                                                            </h6>
+                                                                            <h5>RS <%=item.price%>
+                                                                            </h5>
+
+
+
+                                                                        </div>
+                                                                    </td>
+
+
+                                                                    <td class="cart__close"><a
+                                                                            href="/deleteWishlist?id=<%=item._id%>"><i
+                                                                                class="fa fa-close"></i></a></td>
+                                                                    <td class="cart__close ">
+                                                                        <form
+                                                                            action="/addToCart?id=<%=wishlist[i]._id%>"
+                                                                            method="post"> <a href=""><button
+                                                                                    class="mt-1"
+                                                                                    style="border-color: transparent;"
+                                                                                    type="submit"><img
+                                                                                        src="/img/icon/cart.png"
+                                                                                        alt=""></button></a></form>
+                                                                    </td>
+                                                                </tr>
+
+
+                                                                <%}%>
+                                                                    <%}%>
+
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn update__btn">
+                                    <a href="/"><i class="fa fa-spinner"></i><span class="continuebtn"> Continue
+                                            Shopping </span></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <%if(msg!=null){%>
+            <script>
+                new Swal({
+                    title: "Error",
+                    text: "<%=msg%>",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            </script>
+            <%}%>
+
+                <%- include('../layouts/commonfooter.ejs',{session}) %>
+                <%- include('../layouts/footer.ejs') %>

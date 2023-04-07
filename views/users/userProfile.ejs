@@ -1,0 +1,376 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+
+<style>
+  .header-cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-cart-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333!important;
+}
+
+.header-cart-total {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333!important;
+  margin-top: 20px;
+}
+
+.wrap-input-cart {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.num-product {
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.header-cart-wrapbtn {
+  margin-left: 10px;
+}
+
+.flex-c-m {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtext-103 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0c0c0c;
+}
+
+.bg1 {
+  background-color: #333;
+}
+
+.bor1 {
+  border: 1px solid #333;
+}
+
+.hov-btn1:hover {
+  background-color: #fff;
+  color: #333;
+}
+
+.p-lr-15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.trans-04 {
+  transition: all 0.4s;
+}
+
+/* Media queries */
+@media screen and (max-width: 767px) {
+  .header-cart {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .header-cart-title {
+    font-size: 20px;
+  }
+
+  .header-cart-total {
+    font-size: 24px;
+    margin-top: 0;
+  }
+
+  .wrap-input-cart {
+    width: 70%;
+    margin-right: 0;
+  }
+
+  .header-cart-wrapbtn {
+    margin-left: 0;
+  }
+}
+@media only screen and (max-width: 280px) {
+  .walldiv{
+    width: 240px;
+    height: 200px;
+    left: 10px;
+  }
+
+}
+@media only screen and (max-width: 400px) {
+  .order-text{
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+
+}
+
+
+</style>
+  <!-- Page Preloder -->
+  <div id="preloder">
+    <div class="loader"></div>
+  </div>
+ 
+
+  <section style="background-color:white;">
+    <div class="container"><br><br>
+      <div class="row ">
+        <div class="col-lg-5">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <%if(userData.image){%>
+                <img src="/userProfileIMG/<%=userData.image%>" alt="avatar" class="rounded-circle img-fluid"
+                  style="width: 150px; height: 150px;">
+                <%}else{%>
+                  <img src="https://storage.needpix.com/rsynced_images/blank-profile-picture-973460_1280.png"
+                    alt="avatar" class="rounded-circle img-fluid" style="height: 150px;width: 150px;">
+                  <%}%>
+                    <h5 class="my-3">
+                      <%=userData.username%>
+                    </h5>
+                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center mb-2" style="width: 10px;">
+                      <a style="width: 80px;" href="/editProfile" class="btn btn-primary d-flex justify-content-center"><span style="font-size: 15px;"> Edit Profile</span></a>
+                      <a style="width: 140px;" href="/changePassword" class="btn btn-outline-primary d-flex justify-content-center ms-1"><span> Change Password</span></a>
+                    </div>
+                  </div>
+                    <small class="text-success">
+                      <%=message%>
+                    </small>
+            </div>
+            
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">
+                    <%=userData.username%>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">
+                    <%=userData.email%>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">
+                    <%=userData.phone%>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <%if(userData.address=='undefined'){%>
+                    <p class="text-muted mb-0">User did't added address</p>
+                    <%}else{%>
+                      <p class="text-muted mb-0">
+                        <%=userData.address[0].address%>
+                      </p>
+                      <%}%>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ////wallet -->
+        <div class="col-lg-7 mb-5 p-0 " >
+
+
+
+          <div class="row mb-3 walldiv" style="background-color: rgb(192, 192, 192); border-radius: 5px; border: solid rgb(209, 200, 200) 2px;">
+            <div class="col p-0">
+                <div class="col-12 p-3 mb-3 pb-4 pt-0" style="border-bottom:solid rgb(131, 131, 131) 2px; padding: 0!important;">
+                    <div class="  " style="background-color: rgb(162, 164, 179);">
+                        <div class="d-flex justify-content-center">
+                            <span class="mtext-103 cl2 mb-3 mt-2 " style="text-decoration: underline  ;">
+                                Your Wallet
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span class="mb-2">
+                                Wallet balance: <b>₹ <%=userData.wallet%></b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 p-3">
+                        <form method="POST" action="/add-money" class="d-flex justify-content-center">
+                            <div class=""><h6 class="mb-2">Enter amount to add to wallet</h6>
+                              <div class="d-flex justify-content-center">
+                              <div class="">
+                                <input class=" mt-1" type="number" style="height: 40px; width: 100px;" name="amount" placeholder="">
+                            </div><div>
+                                <button type="submit"  style="height: 40px;" class="btn btn-outline-info mt-1 ms-1 ">
+                                  Add money
+                              </button> </div>
+                            </div>
+                             </div>
+                            <div class="  ">
+                                
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
+        
+          
+      
+
+          <div class="row mb-3" style="border: solid rgb(226, 219, 219) .5px; border-radius: 3px;">
+            <div class="col p-3">
+              <div class="container">
+                
+             
+                   
+                   <div class="d-flex-col justify-content-between ">
+                  <div>
+                    <span class="" >
+                      <h1 class="h5 align-self-center order-text mb-3">Order Details</h1>
+                    </span>
+                  </div>
+               
+                  <!-- <div class="">
+
+                    <input type="search" name="searchBy" placeholder="OrderId" class="col-6 col-sm-6" style="height: 35px;"> <input
+                      type="submit" value="Search" class="btn btn-outline-dark srchbt" style="height: 35px;">
+                  </div> -->
+                </div>
+               
+                <div
+                  class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light  rounded-3">
+                 
+                  <div class="col-2 align-self-center ps-3 ms-2 mt-1">
+                    <h1 class="h6 fs-15">Order ID</h1>
+                  </div>
+                  <div class="col-3 d-flex justify-content-center ps- mt-2">
+                    <h1 class="h6 fs-15 ">Date of Order</h1>
+                  </div>
+                  <div class="col-3 d-flex justify-content-center ps- mt-2">
+                    <h1 class="h6 fs-15">Show details</h1>
+                  </div>
+                  <div class="col-2 align-self-center">
+                    <h1 class="h6 fs-15 mt-1">Status</h1>
+                  </div>
+                </div>
+                <% for (let i=0; i <orders.length; i++) { %>
+                  <div
+                    class="d-md-flex d-sm-block justify-content-md-between justify-content-sm-center text-center border-bottom border-2 my-2 bg-light  rounded-3">
+
+
+
+                    <div class="col-md-2 text-sm-center text-md-start align-self-center my-2">
+                      <h1 class="h6">2F456DA<%=i %></h1>
+                    </div>
+                    <div class="col-md-4 text-sm-center text-md-start align-self-center my-2">
+                      <% let date = new Date(orders[i].date); %>
+                      <% let formattedDate = date.toLocaleString(); %>
+                      <h1 class="h6"><%= formattedDate %></h1>
+                    </div>
+
+                    <div class="col-md-2 text-sm-center text-md-start align-self-center my-2"> <a
+                        class="btn btn-outline-dark " href="/ordersView?orderid=<%=orders[i]._id%>">Details</a>
+                    </div>  
+                        <%if(orders[i].admin_cancelled==true||orders[i].user_cancelled==true){%>
+                          <%if(orders[i].paymentType=='online'){ %>
+                      <div class="col-md-2 text-sm-center text-md-start align-self-center" style="margin-right: 2vh;" > <a
+                        class="btn btn-outline-dark btn-danger" style="width: 12vh;" href="#">Cancelled</a> </div>
+                          <%}%>
+                     <%}else if (orders[i].is_delivered==false &&orders[i].is_confirmed==true){%>
+                    <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                        class="btn btn-success w-" style="width: 12vh;" href="#">Confirmed</a> </div>
+                
+                  <%}else if (orders[i].is_delivered==true &&orders[i].return==false){%>
+                    <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                        class="btn btn-success w-" style="width: 12vh;" href="#">Delivered</a> </div>
+                    
+                      <%}else if(orders[i].return==true&&orders[i].admin_reject===2){ %>
+                        <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                          class="btn btn-warning w-" style="width: 12vh;" href="#">Returned</a> </div>
+
+                        <%}else if (orders[i].return==true&&orders[i].admin_reject===1){%>
+                        <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                          class="btn btn-warning w-" style="width: 12vh;" href="#">Return Rejected</a> </div>
+                          <%} else if(orders[i].is_confirmed==false&&orders[i].admin_cancelled==false&&orders[i].user_cancelled==false){%>
+                            <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                              class="btn btn-warning w-" style="width: 12vh;" href="#">Pending</a> </div>
+                        <%} else{%>
+                      <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
+                        class="btn btn-warning w-" style="width: 12vh;" href="#">Return</a> </div>
+                    <%}%>
+                  </div>
+                  <%}%>
+              </div>
+             
+
+
+            </div>
+
+            
+
+          </div>
+          <div class="d-flex justify-content-end">
+          <%for(let j=1;j<=totalPages;j++){%>
+            <a class="text-white btn-sm btn-secondary me-1" href="?page=<%=j%>"><%=j%></a>
+           <%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <%if(message!=null){%>
+    <script>
+      new Swal({
+        title: "Success",
+        text: "<%=message%>",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 2000
+      });
+    </script>
+    <%}%>
+      <%- include('../layouts/commonfooter.ejs',{session}) %>
+      <%- include('../layouts/footer.ejs') %>

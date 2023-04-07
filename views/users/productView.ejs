@@ -1,0 +1,244 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+        <section class="shop-details mb-5">
+            <div class="product__details__pic">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__details__breadcrumb">
+                                <a href="/">Home</a>
+                                <a href="/shopPage">Shop</a>
+                                <span>Product Details</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2   imgbar">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
+                                        <div class="product__thumb__pic set-bg imgbar"
+                                            data-setbg="/proImage/<%=product.image[0]%>">
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
+                                        <div class="product__thumb__pic set-bg imgbar"
+                                            data-setbg="/proImage/<%=product.image[1]%>">
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
+                                        <div class="product__thumb__pic set-bg imgbar"
+                                            data-setbg="/proImage/<%=product.image[2]%>">
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
+                                        <div class="product__thumb__pic set-bg imgbar"
+                                            data-setbg="/proImage/<%=product.image[3]%>">
+
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 col-md-9">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                    <div class="mt-5">
+
+
+                                        <a href="/proImage/<%=product.image[0]%>" class="MagicZoom"
+                                            data-options="zoomDistance: 1000"><img
+                                                src="/proImage/<%=product.image[0]%>"></a>
+
+                                        <img src="" alt="">
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                    <div class="">
+                                        <a href="/proImage/<%=product.image[1]%>" class="MagicZoom"
+                                            data-options="zoomDistance: 1000"><img
+                                                src="/proImage/<%=product.image[1]%>"></a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                    <div class="">
+                                        <a href="/proImage/<%=product.image[2]%>" class="MagicZoom"
+                                            data-options="zoomDistance: 1000"><img
+                                                src="/proImage/<%=product.image[2]%>"></a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabs-4" role="tabpanel">
+                                    <div class="">
+                                        <a href="/proImage/<%=product.image[3]%>" class="MagicZoom"
+                                            data-options="zoomDistance: 1000"><img
+                                                src="/proImage/<%=product.image[3]%>"></a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product__details__content">
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="product__details__text">
+                                <% const stock=product.stock %>
+                                    <div>
+                                        <% let message=stock> 0 ? null : 'Product is out of stock.'; %>
+                                            <h6 class="text-danger">
+                                                <%= message %>
+                                            </h6>
+                                    </div>
+                                    <h4>
+                                        <%=product.title%>
+                                    </h4>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <span> - 5 Reviews</span>
+                                    </div>
+                                    <h3>
+                                        <%=product.price%> <span>70.00</span>
+                                    </h3>
+                                    <p> <%=product.description%>.</p>
+                                    <div class="product__details__option " style="display: block;">
+                                        <div class="product__details__option__size d-flex justify-content-center">
+                                            <span>Size:</span>
+                                            <div class="d-flex justify-content-center">
+                                            <label class="sss d-flex justify-content-center" for="xxl">  xxl
+                                                <input type="radio" id="xxl">
+                                            </label>
+                                            <label class="active sss d-flex justify-content-center" for="xl">xl
+                                                <input type="radio" id="xl">
+                                            </label>
+                                            <label class="sss d-flex justify-content-center" for="l">l
+                                                <input type="radio" id="l">
+                                            </label>
+                                            <label class="sss d-flex justify-content-center" for="sm">s
+                                                <input type="radio" id="sm">
+                                            </label>
+                                        </div>
+                                        </div>
+                                        <div class="product__details__option__color" style="display: block;">
+                                            <span>Color:</span>
+                                            <label class="c-1" for="sp-1">
+                                                <input type="radio" id="sp-1">
+                                            </label>
+                                            <label class="c-2" for="sp-2">
+                                                <input type="radio" id="sp-2">
+                                            </label>
+                                            <label class="c-3" for="sp-3">
+                                                <input type="radio" id="sp-3">
+                                            </label>
+                                            <label class="c-4" for="sp-4">
+                                                <input type="radio" id="sp-4">
+                                            </label>
+                                            <label class="c-9" for="sp-9">
+                                                <input type="radio" id="sp-9">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <form action="/addToCart?id=<%=product._id%>" method="post">
+                                        <div class="product__details__cart__option">
+
+                                            <button class="primary-btn" type="submit">add to cart</button>
+                                        </div>
+                                    </form>
+                                    <form action="/addingTOWishlist?id=<%=product._id%>" method="post">
+                                    <div class="product__details__btns__option">
+                                        <!-- <a href=""><i class="fa fa-heart"></i> add to wishlist</a> -->
+                                        <button class=" fa fa-heart" style="border: none; background: none  ; size: 40px;" type="submit">add to wishlist</button>
+
+                                    </div>
+                                </form>
+                                    <div class="product__details__last__option">
+                                        <h5><span>Guaranteed Safe Checkout</span></h5>
+                                        <img src="img/shop-details/details-payment.png" alt="">
+                                        <ul>
+                                            <li><span>SKU:</span> 3812912</li>
+                                            <li><span>Categories:</span>
+                                                <%=product.category%>
+                                            </li>
+                                            <li><span>Tag:</span> Clothes, Skin, Body</li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__details__tab">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " data-toggle="tab" href="#tabs-5"
+                                            role="tab">Description</a>
+                                    </li>
+                                    <!-- <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Customer
+                                            Reviews(5)</a>
+                                    </li> -->
+
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                        <div class="product__details__tab__content d-flex justify-content-center">
+                                            <p class="" style="font-size: 18px; font-style: normal;">
+                                                <%=product.description%>.
+                                            </p>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                        <div class="product__details__tab__content">
+                                            <div class="product__details__tab__content__item">
+                                                <h5>Products Reviews</h5>
+                                                <p>A Pocket PC is a handheld computer, which features many of the same
+                                                    capabilities as a modern PC. These handy little devices allow
+                                                    individuals to retrieve and store e-mail messages, create a contact
+                                                    file, coordinate appointments, surf the internet, exchange text
+                                                    messages
+                                                    and more. Every product that is labeled as a Pocket PC must be
+                                                    accompanied with specific software to operate the unit and must
+                                                    feature
+                                                    a touchscreen and touchpad.</p>
+                                                <p>As is the case with any new technology product, the cost of a Pocket
+                                                    PC
+                                                    was substantial during it’s early release. For approximately
+                                                    $700.00,
+                                                    consumers could purchase one of top-of-the-line Pocket PCs in 2003.
+                                                    These days, customers are finding that prices have become much more
+                                                    reasonable now that the newness is wearing off. For approximately
+                                                    $350.00, a new Pocket PC can now be purchased.</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <%- include('../layouts/commonfooter.ejs',{session}) %>
+        <%- include('../layouts/footer.ejs') %>

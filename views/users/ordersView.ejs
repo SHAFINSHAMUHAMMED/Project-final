@@ -1,0 +1,327 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+        <div class="container-fluid my-5  d-flex  justify-content-center">
+            <div class="card card-1">
+                <div class="card-header bg-white">
+                    <div class="media flex-sm-row flex-column-reverse justify-content-between  ">
+                        <div class="col my-auto">
+                            <h4 class="mb-0">Order Summary<span class="change-color"> </span> </h4>
+                        </div>
+                        <div class="col-auto text-center  my-auto pl-0 pt-sm-4 "> <img
+                                class="img-fluid my-auto align-items-center mb-0" src="/img/logo.png" width="115"
+                                height="115">
+                            <p class="mb-4 pt-0 Glasses"></p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="card-body">
+                    <div class="row justify-content-between mb-3">
+                        <%if(orders.is_delivered==true){%>
+                        <div class="col-auto">
+                            <h6><button class="color-1 mb-0 change-color border-0" onclick="printTable()">Print</button></h6>
+                        </div>
+                        <%}%>
+                        
+                        <!-- <div class="col-auto  "> <small>Receipt Voucher : 1KAU9-84UIL</small> </div> -->
+                    </div>
+                    <% let totalPrice=0 %>
+                        <% for (let i=0; i < orders.item.length; i++) { %>
+
+                            <div class="row">
+                                
+                                    <div class="card card-2">
+                                        <div class="card-body">
+                                            <div class="media justify-content-center">
+                                                <div class="sq align-self-center "> <img
+                                                        class="img-fluid  my-auto align-self-center  pl-0 p-0 m-0"
+                                                        src="/proImage/<%=orders.item[i].product.image[0]%>" width="115"
+                                                        height="115" /> 
+                                                        <h6 class="mb-0 text-center"><%=orders.item[i].product.title%></h6>
+                                                    </div>
+                                                        
+                                                <div class="  ">
+                                                    <div class="row ms-5 mt-5">
+                                                        <div class="col-auto my-auto d-md-block "><h5>Quantity:&nbsp;<%=orders.item[i].quantity%></h5></div>
+                                                    </div>
+                                                    <div class="row ms-5 mt-3">
+                                                        <div class="col-auto my-auto d-md-block "><h5>Price:&nbsp; <%=orders.item[i].product.price%></h5></div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <hr class="my-3 ">
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                            <% totalPrice +=orders.item[i].product.price * orders.item[i].quantity %>
+                                <% } %>
+
+                                <% const deliveryDate=new Date(orders.delivered_date)%>
+                                <% const returnDate=new Date(deliveryDate.getTime() + (14 * 24 * 60 * 60 * 1000)); %>
+                                <% const currentDate=new Date(); %>
+                                <div class="  text-end mt-2 ">
+
+                                    <% if(orders.is_delivered==false){ %>
+                                        <%if(orders.admin_cancelled==true){%>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                        <h6 class="text-danger">Your order is rejected  <b>!</b> Please Contact Seller </h6>
+                                                </div>
+                                            </div>
+                                        <%}else if(orders.user_cancelled==true){%>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                        <h6 class="text-danger"> Order is Cancelled</h6>
+                                                </div>
+                                            </div>
+                                            <%}else{%>
+                                    <div>
+                                        <a href="/cancelOrder?orderid=<%=orderId%>">
+                                            
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <button class="btn-danger" style="width: 100px; height: 30px;">
+                                                            <small> Cancel Order </small>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            
+                                         
+                                        </a>
+                                    </div>
+                                        <%}%>
+                                       
+                                    <% }else if(orders.is_delivered==true&&orders.return==false&&orders.admin_reject==0){%>
+                                        <%if(currentDate<=returnDate){%>
+                                        <div>
+                                            <% console.log(deliveryDate) %>
+                                            <a href="/returnOrder?orderid=<%=orderId%>">
+                                                
+                                                    <div class="row">
+                                                        <div class="col-md-3 mb-3">
+                                                            <button class="btn-warning" style="width: 100px; height: 30px;">
+                                                                <small> Return Order </small>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                
+                                             
+                                            </a>
+                                        </div>
+                                        <%}%>
+                                <%}else if(orders.is_delivered==true&&orders.return==true&&orders.admin_reject==0){%>
+                                    <div>
+                                        <a href="/cancellReturn?orderid=<%=orderId%>">
+                                            
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <button class="btn-warning" style="width: 100px; height: 30px;">
+                                                            <small> Cancell Return </small>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            
+                                         
+                                        </a>
+                                    </div>         
+                                <%}else if (orders.admin_reject==1){%>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                           
+                                                <h6 class="text-danger">Return Rejected <b>!</b> Please Contact Seller </h6>
+                                            
+                                        </div>
+                                    </div>
+                                    <%}else{%>
+                                        <h6 class="text-success">Return Approved </h6>
+                                        <%}%>  
+
+                                </div>
+                                
+                                <div class="row tm-edit-product-row mt-3">
+                                    <div class="col-xl-6 col-lg-6 col-md-12">
+                                      <div class="p-3 text-dark" style="border: solid gray 1px;" >
+                                        <div ><h6 class="" style="font-weight: bold;">Delivery Address</h6><hr style="margin-top: 0;"> </div>
+                                        <h6><%=orders.address[0].username%></h6>
+                                        <div><%=orders.address[0].address%></div>
+                                        <h6><%=orders.address[0].city%></h6>
+                                        <h6><%=orders.address[0].zip%></h6>
+                                        <h6><%=orders.address[0].phone%></h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12">
+                                      <div class="text-dark" >
+                                        <div class="p-3" style="border: solid gray 1px;">
+                                          <div class=""><h6 style="font-weight: bold;">Order Details</h6><hr style="margin-top: 0;"> </div>
+                                          <div>
+                                          <h6 class="d-flex justify-content-between"><span>Total Price:</span> <span> <%=orders.totalPrice%></span></h6>
+                                        </div>
+                                          <div>
+                                           <h6 class="d-flex justify-content-between"><span> Discount:</span> <span> <%=orders.discount%></span></h6>
+                                          </div>
+                                          <div>
+                                           <h6 class="d-flex justify-content-between"><span> Tax:</span><span> <%=orders.totalPrice*(12/100)%></span></h6>
+                                          </div>
+                                          <div>
+                                           <h6 class="d-flex justify-content-between"><span class=""> Shipping Fee:</span> <span> 40</span></h6>
+                                          </div>
+                                          
+                                          <h6 class="d-flex justify-content-between"><span class="me-3"> Grand Total:</span> <span> <%=orders.grandTotal%></span></h6>
+                                          </div>
+                                      </div>
+                    
+                                    </div>
+                    
+                                  </div>
+                                    
+                                    </div>
+                                                  
+                                    
+
+               
+            </div>
+        </div>
+<style>
+    .hide{
+        display: none;
+    }
+</style>
+        <!-- Table printing -->
+                <div  class="card hide"   id="sampleTable">
+                    <div class="card-body">
+                      <div class="container mb-5 mt-3">                 
+                        <div class="container">
+                            <div><img src="/img/logo.png" alt=""></div>
+                           <div class="d-flex justify-content-center"><p class="text-muted" style="font-size: 25px;">Invoice</p></div>      
+                          <div class="row">
+                            <div class="col-xl-8">
+                              <ul class="list-unstyled" style="text-decoration: none;">
+                                <li class="text-muted">To: <span style="color:#5d9fc5 ;"><%=orders.address[0].username%></span></li>
+                                <li class="text-muted"><%=orders.address[0].address%></li>
+                                <li class="text-muted"><%=orders.address[0].city%></li>
+                                <li class="text-muted"><%=orders.address[0].zip%></li>
+                                <li class="text-muted"><i class="fas fa-phone"></i> <%=orders.address[0].phone%></li>
+                              </ul>
+                            </div>
+                            <div class="col-xl-4">
+                              
+                              <ul class="list-unstyled">
+                                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                    class="fw-bold">ID:</span>#123-456</li>
+
+                                    <% let date = new Date(orders.date); %>
+                      <% let formattedDate = date.toLocaleString(); %>
+                                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                    class="fw-bold">Creation Date: </span><%=formattedDate%></li>
+                                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                    class="me-1 fw-bold">Status:</span><span class="badge bg-success text-black fw-bold">
+                                    Delivered</span></li>
+                              </ul>
+                            </div>
+                          </div>
+                  
+                          <div class="row my-2 mx-1 justify-content-center">
+                            <table class="table table-striped table-borderless">
+                              <thead style="background-color:#84B0CA ;" class="text-white">
+                                
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Description</th>
+                                  <th scope="col">Qty</th>
+                                  <th scope="col">Unit Price</th>
+                                  <th scope="col">Amount</th>
+                                </tr>
+                               
+                              </thead>
+                              <tbody>
+                                <% for (let i=0; i < orders.item.length; i++) { %>
+                                <tr>
+                                  <th scope="row"><%=i+1%></th>
+                                  <td><%=orders.item[i].product.title%></td>
+                                  <td><%=orders.item[i].quantity%></td>
+                                  <td><%=orders.item[i].product.price%></td>
+                                  <td><%=orders.item[i].quantity*orders.item[i].product.price%></td>
+                                </tr>
+                                <%}%>
+                              </tbody>
+                  
+                            </table>
+                          </div>
+                          <div class="row justify-content-end">
+                            
+                            <div class="col-xl-3">
+                              <ul class="list-unstyled">
+                                <%let tax=orders.totalPrice*(12/100)%>
+                                <%let discount=orders.grandTotal-(40+tax)%>
+                                <%discount=discount-totalPrice%>
+                                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span><%=orders.totalPrice%></li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(12%)</span><%=tax%></li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Shipping</span>40</li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount</span><%=discount%></li>
+                              </ul>
+                              <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
+                                  style="font-size: 25px;"><%=orders.grandTotal%></span></p>
+                            </div>
+                          </div>
+                          <hr>
+                          <div class="row justify-content-center">
+                            
+                             <span class="d-flex justify-content-center"> <p class="fw-bold">Thank you for your purchase</p></span>
+                           
+                          </div>
+                  
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+        <script type="text/javascript">
+            // function exportTable() {
+            //     // Select the table element
+            //     var table = document.getElementById("sampleTable");
+    
+            //     // Create a new workbook
+            //     var wb = XLSX.utils.book_new();
+    
+            //     // Create a new worksheet
+            //     var ws = XLSX.utils.table_to_sheet(table);
+    
+            //     // Add the worksheet to the workbook
+            //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+            //     // Save the workbook as an xlsx file
+            //     XLSX.writeFile(wb, "sample.xlsx");
+            // }
+            function printTable() {
+  var table = document.getElementById("sampleTable");
+  if (!table) {
+    console.error("Table element not found.");
+    return;
+  }
+  var newWin = window.open('', 'Print-Window');
+  if (!newWin) {
+    console.error("Could not open print window.");
+    return;
+  }
+  newWin.document.open();
+  newWin.document.write('<html><body onload="window.print()">' + table.outerHTML + '</html>');
+  newWin.document.close();
+  setTimeout(function () {
+    if (!newWin.closed) {
+      newWin.close();
+    }
+  }, 1000);
+}
+
+
+        </script>
+
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+        <%- include('../layouts/commonfooter.ejs',{session}) %>
+        <%- include('../layouts/footer.ejs') %>

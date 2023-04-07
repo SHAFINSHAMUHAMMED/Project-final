@@ -1,0 +1,77 @@
+<%- include('../layouts/header.ejs') %>
+<!-- Page Preloder -->
+<style>
+  .img {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+}
+@media only screen and (max-width: 375px) {
+  .otp{
+    font-size: 13px;
+  }
+  .loginn{
+    font-size: 18px;
+  }
+  .bbb{
+    width: 90px;
+  }
+}
+
+</style>
+<div id="preloder">
+  <div class="loader"></div>
+</div>
+<div class="img js-fullheight vh-100" style="background-image:url(/img/backk.jpg) ;" >
+<section class="vh-100 bg">
+  <div class="container-xl h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div>
+          <div class="p-5 text-center">
+
+            <h3 class="mb-5 text-white">User Login</h3>
+
+        <form action="/login" method="post">
+             <div class="form-outline mb-5">
+              <input name="email" type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email" />
+              
+            </div>
+
+            <div class="form-outline mb-4">
+              <input name="password" type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password"/>
+              <% if(typeof message!='undefined'||typeof msg!='undefined'){
+                %>
+                <small class="text-success"><%= message %></small>
+                <small class="text-danger"><%= msg %></small>
+                <%
+             } 
+                %>
+            </div>
+            
+            <div class="d-grid gap-2 col-6 mx-auto mb-4">
+                <button class="btn btn-dark bbb" type="submit"><span class="loginn"> Login</span></button>
+            </div>
+
+        </form>
+       
+          <div class="d-grid gap-2 col-6 mx-auto mb-4">
+            <a href="/otp-login" role="button" class="btn btn-block btn-dark"><span class="otp">OTP login</span> </a>
+            
+          </div>
+          <div class="d-grid gap-2 col-6 mx-auto mb-4">
+            <a href="/signup" role="button" class="btn btn-block btn-dark">Signup</a>
+            
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+  
+<%- include('../layouts/footer.ejs') %>

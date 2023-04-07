@@ -1,0 +1,37 @@
+<%- include('../layouts/adminheader.ejs') %>
+<section class="vh-100 img js-fullheight backgrndotp">
+    <div class="container-xl h-100">
+      <div class="row d-flex justify-content-center align-items-center w-100 h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div>
+            <div class="p-5 text-center">
+              <a href="/"><img width="100%" src="/img/footer-logo.png" alt=""></a>
+              <h3 class="mb-4 mt-5 text-light">Admin Login</h3>
+  
+          <form action="/admin" method="post">
+               <div class="form-outline mb-4">
+                <input name="email" type="email" id="typeEmailX-2" class="form-control bg-dark form-control-lg" placeholder="Email" />
+              </div>
+  
+              <div class="form-outline mb-4">
+                <input name="password" type="password" id="typePasswordX-2" class="form-control bg-dark form-control-lg" placeholder="Password"/>
+                <% if(typeof msg!='undefined'){
+                  %>
+                  <small class="text-danger"><%= msg %></small>
+                  <%
+               } 
+                  %>
+              </div>
+              
+              <div class="d-grid gap-2 col-6 mx-auto mb-4">
+                  <button class="btn btn-warning" type="submit">Login</button>
+              </div>
+  
+          </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<%- include('../layouts/adminfooter.ejs') %>

@@ -1,0 +1,279 @@
+<%- include('../layouts/adminheader.ejs') %>
+
+
+<body id="reportsPage">
+  <div class="" id="home">
+    <nav class="navbar navbar-expand-xl">
+      <div class="container h-100 ">
+        <a class="navbar-brand me-3" href="/admin/home">
+          <h1 class="tm-site-title mb-0 font"><img src="/img/footer-logo.png" alt=""></h1>
+      </a>
+        <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse"
+          data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-justify" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+            </svg></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto h-100">
+            <li class="nav-item">
+              <a class="nav-link " href="/admin/home">
+                <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-speedometer2" viewBox="0 0 16 16">
+                    <path
+                      d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z" />
+                    <path fill-rule="evenodd"
+                      d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z" />
+                  </svg></i>
+                Dashboard
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link " href="/admin/orders">
+                <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-box-seam" viewBox="0 0 16 16">
+                  <path
+                    d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+                </svg></i>
+                Orders
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/userData">
+                <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                    <path
+                      d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                  </svg></i>
+                User Data
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/products">
+                <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-box-seam" viewBox="0 0 16 16">
+                    <path
+                      d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+                  </svg></i>
+                Products
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/category">
+                <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-c-square-fill" viewBox="0 0 16 16">
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2Zm6.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z" />
+                  </svg></i>
+                Category
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin/Coupons">
+                <i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket" viewBox="0 0 16 16">
+                    <path d="M4 7h8v1H4V7zm1.5-3.5a1.5 1.5 0 0 1 3 0v3a1.5 1.5 0 0 1-3 0v-3zm0 6a1.5 1.5 0 0 1 3 0v3a1.5 1.5 0 0 1-3 0v-3z"/>
+                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h7A2.5 2.5 0 0 1 14 2.5v11a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-11zM4.5 1A1.5 1.5 0 0 0 3 2.5v11A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 11.5 1h-7z"/>
+                  </svg>
+                </i>
+                Coupons
+              </a>
+            </li>
+            
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+                <span>
+                  More <i class="bi bi-caret-down-fill"></i>
+                </span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/admin/banner">Banner</a>
+                <a class="dropdown-item" href="/admin/salesReport">Sales Report</a>
+                <a class="dropdown-item" href="#">Security</a>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link " href="/admin/logout">
+                <i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                  </svg></i>
+                Logout
+              </a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+      <div class="col-11">
+        <section>
+          <div class="container-xl">
+            <div class="row d-flex justify-content-center align-items-center">
+              <!-- Column for adding coupon -->
+              <div class="col-12 col-md-6">
+                <div>
+                  <div class="text-center">
+                    <small class="text-danger error"></small>
+                    <div id="error-message"></div>
+                    <br><br>
+                    <form action="/admin/addCoupon" method="post">
+                      <label for="" class="fw-bold">Add Coupons</label>
+                      <div class="row">
+                        <div class="col-12">
+                          <label for="couponId">Coupon ID:</label>
+                          <input type="text" id="couponId" name="couponId" class="form-control" >
+                        </div>
+                        <div class="col-12">
+                          <label for="expiryDate">Expiry Date:</label>
+                          <input type="date" id="expiryDate" name="expiryDate" class="form-control text-center text-uppercase" >
+                        </div>
+                        <div class="col-12">
+                          <label for="items">No of Coupon:</label>
+                          <input type="number" id="items" name="items" class="form-control" >
+                        </div>
+                        <div class="col-12">
+                          <label for="minAmount">Minimum Amount:</label>
+                          <input type="number" id="minAmount" name="minAmount" class="form-control" >
+                        </div>
+                        <div class="col-12">
+                          <label for="maxAmount">Maximum Discount:</label>
+                          <input type="number" id="maxAmount" name="maxAmount" class="form-control" >
+                        </div>
+                        <div class="col-12">
+                          <label for="discount">Discount %:</label>
+                          <input type="number" id="discount" name="discount" class="form-control" >
+                        </div>
+                        <div class="col-12 mt-3">
+                          <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-secondary" type="submit">Add</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- Column for showing added coupons -->
+              <div class="col-12 col-md-6">
+                <div>
+                  <!-- Your code to display added coupons goes here -->
+                  <div class="container">
+                    <!-- row -->
+                    
+                        <div class="col-12 tm-block-col">
+                            <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                                <h2 class="tm-block-title">Coupons List</h2>
+                                <table class="table  text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Expiry Date</th>
+                                            <th scope="col">Nos</th>
+                                            <th scope="col">Discount%</th>
+                                            <th scope="col">MaxAmt</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <% if(coupon){
+                                      for(let i=0;i<coupon.length;i++){%>
+                                    <tbody>
+                                        
+                                                <tr scope="row">
+                                                    <td>
+                                                      <%=i+1%>
+                                                    </td>
+                                                    <td>
+                                                      <%=coupon[i].couponId%>  
+                                                    </td>
+                                                   
+                                                      <td>
+                                                     <%= new Date(coupon[i].expiryDate).toLocaleDateString('en-GB') %>
+                                                      
+                                                    </td>
+                                                    <td>
+                                                      <%=coupon[i].minItems%> 
+                                                    </td>
+                                                    <td>
+                                                      <%=coupon[i].discount%> 
+                                                    </td>
+                                                    <td>
+                                                      <%=coupon[i].maxAmt%> 
+                                                    </td>
+                                                    
+                                                    <% if (new Date(coupon[i].expiryDate) < new Date()) { %>
+                                                      <td>
+                                                      Expired
+                                                    </td>
+                                                    <% } else { %>
+                                                      <td>
+                                                      Active
+                                                    <% } %>
+                                                  <td>
+                                                    
+                                                    <a href="/admin/deleteCoupon?id=<%=coupon[i]._id%>"><button type="button"
+                                                                class=" btn-warning" >Delete</button></a>
+                                                    </td>
+
+                                                </tr>
+                                                <%}} else{%>
+                                                    <tr>
+                                                        <td colspan="5">Users Not Found</td>
+                                                    </tr>
+                                                   <%}%>
+                                    </tbody>
+                                   
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+
+      
+
+    </div>
+    <%if(message){%>
+        <script>
+          Swal.fire({
+            title:'<%=message%>' , 
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          });
+        </script>
+        <%}%>
+        <%if(msg!=undefined){%>
+        <script>
+          Swal.fire({
+            title:'<%=msg%>' , 
+            icon: 'success',
+            confirmButtonText: 'Ok'
+          });
+        </script>
+        <%}%>
+  </body>
+        <%- include('../layouts/adminfooter.ejs') %>

@@ -1,0 +1,366 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+
+    <div class="container d-flex justify-content-center mt-5 mb-5" style="background-color: antiquewhite;">
+
+
+
+      <div class="col mt-5">
+        <div class="d-flex" style="justify-content: start;">
+          <div class="col-md-6">
+
+            <span><b> Payment Method</b></span>
+            <div class="card mt-3">
+
+              <div class="accordion" id="accordionExample">
+                <form action="/payMethod" method="post">
+                  <div class="card" style="justify-content: space-between;">
+                    <div class="card-header p-0" id="">
+                      <h2 class="mb-0">
+                        <button class="btn btn-light btn-block text-left  p-3 rounded-0 border-bottom-custom"
+                          type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                          aria-controls="collapseTwo">
+                          <div class="d-flex justify-content-between ms-2">
+                            <input class="form-check-input" type="radio" value="wallet" name="radiovalue"
+                              id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1"> <span>Wallet</span>
+                            </label>
+
+
+
+                            <img src="https://cdn-icons-png.flaticon.com/512/482/482541.png" alt="" style="width: 20px; height: 20px;">
+
+                            
+                          </div>
+                          <div class="d-flex justify-content-end mt-3">
+                            <span>₹<b><%=userData.wallet%> </b> </span>
+                          </div>
+                          <div class="d-flex justify-content-end">
+                          <% if(mssg){ %>
+                              
+                            <small class="text-danger"><%=mssg%></small>
+                            <%}else{%>
+                            <%}%>
+                          </div>
+                        </button>
+                      </h2>
+                    </div>
+                    
+                          
+                            
+                          </div>
+                        
+                 
+
+                  <div class="card" style="justify-content: space-between;">
+                    <div class="card-header p-0" id="">
+                      <h2 class="mb-0">
+                        <button class="btn btn-light btn-block text-left  p-3 rounded-0 border-bottom-custom"
+                          type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                          aria-controls="collapseTwo">
+                          <div class="d-flex justify-content-between ms-2">
+                            <input class="form-check-input" type="radio" value="cod" name="radiovalue"
+                              id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2"> <span>Cash On Delivary</span>
+                            </label>
+
+
+
+                            <img src="https://cdn-icons-png.flaticon.com/512/5359/5359666.png" width="30">
+
+
+                          </div>
+                        </button>
+                      </h2>
+                    </div>
+                    <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                          <div class="card-body">
+                            <input type="text" class="form-control" placeholder="Paypal email">
+                          </div>
+                        </div> -->
+                  </div>
+
+                  <div class="card" style="justify-content: space-between;">
+                    <div class="card-header p-0" id="">
+                      <h2 class="mb-0">
+                        <button class="btn btn-light btn-block text-left  p-3 rounded-0 border-bottom-custom"
+                          type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                          aria-controls="collapseTwo">
+                          <div class="d-flex justify-content-between ms-2">
+                            <input class="form-check-input" type="radio" value="online" name="radiovalue"
+                              id="flexRadioDefault3 ">
+                            <label class="form-check-label" for="flexRadioDefault3"> <span>Paypal</span>
+                            </label>
+
+
+                            <img src="https://i.imgur.com/7kQEsHU.png" width="30">
+
+
+                          </div>
+                        </button>
+                      </h2>
+                    </div>
+                    <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                          <div class="card-body">
+                            <input type="text" class="form-control" placeholder="Paypal email">
+                          </div>
+                        </div> -->
+                  </div>
+
+                  <div class="card" style="justify-content: space-between;">
+                    <div class="card-header p-0" id="">
+                      <h2 class="mb-0">
+                        <button class="btn btn-light btn-block text-left  p-3 rounded-0 border-bottom-custom"
+                          type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                          aria-controls="collapseTwo">
+                          <div class="d-flex justify-content-between ms-2">
+                            <input class="form-check-input" type="radio"  value="Razorpay" name="radiovalue"
+                              id="flexRadioDefault4"onclick="razorpay()">
+                            <label class="form-check-label" for="flexRadioDefault4"> <span>Razorpay</span>
+                            </label>
+
+
+
+                            <img src="https://tse4.mm.bing.net/th?id=OIP.NzeYGNgChBv0KUPMo2NaRQAAAA&pid=Api&P=0" width="50">
+
+
+                          </div>
+                        </button>
+                      </h2>
+                    </div>
+                    <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                          <div class="card-body">
+                            <input type="text" class="form-control" placeholder="Paypal email">
+                          </div>
+                        </div> -->
+                       
+                  </div>
+                  
+                  
+
+                  <!-- 
+
+                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body payment-card-body">
+                          
+                          <span class="font-weight-normal card-text">Card Number</span>
+                          <div class="input">
+
+                            <i class="fa fa-credit-card"></i>
+                            <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
+                            
+                          </div> 
+
+                          <div class="row mt-3 mb-3">
+
+                            <div class="col-md-6">
+
+                              <span class="font-weight-normal card-text">Expiry Date</span>
+                              <div class="input">
+
+                                <i class="fa fa-calendar"></i>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                                
+                              </div> 
+                              
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                              <span class="font-weight-normal card-text">CVC/CVV</span>
+                              <div class="input">
+
+                                <i class="fa fa-lock"></i>
+                                <input type="text" class="form-control" placeholder="000">
+                                
+                              </div> 
+                              
+                            </div>
+                            
+
+                          </div>
+
+                          <span class="text-muted certificate-text"><i class="fa fa-lock"></i> Your transaction is secured with ssl certificate</span>
+                         
+                        </div>
+                      </div>
+                    </div> -->
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="d-flex " style="justify-content: end;">
+          <div class="col-md-6">
+            <span><b> Summary</b></span>
+
+            <div class="card mt-3 mb-5">
+
+              <div class="d-flex justify-content-between p-3">
+
+                <div class="d-flex flex-column">
+
+                  <span>Order Amount </span>
+
+
+                </div>
+
+                <div class="mt-1">
+                  <h6>Rs <b>
+                      <%=Math.round(Total-(tax+40))%>
+                    </b></h6>
+
+                </div>
+
+              </div>
+
+              <hr class="mt-0 line">
+
+              <div class="p-3">
+
+                <div class="d-flex justify-content-between mb-2">
+
+                  <span>Shipping Charge</span>
+                  <span>Rs 40</span>
+
+                </div>
+
+                <div class="d-flex justify-content-between">
+
+                  <span>Total GST <i class="fa fa-clock-o"></i></span>
+                  <span>12%</span>
+
+                </div>
+
+
+              </div>
+
+              <hr class="mt-0 line">
+
+              <% let totalPrice=0 %>
+               
+                  <div class="p-3 d-flex justify-content-between">
+
+                    <div class="d-flex flex-column">
+                      <% Total%>
+                        <span><b> Grand Total</b></span>
+
+
+                    </div>
+
+                    <sup class="super-price">
+                      <%= Math.round(Total) %>
+                    </sup>
+                    <input type="hidden" name="total" value="<%=Total%>">
+
+
+
+                  </div>
+
+
+                  <div class="p-3">
+                    <a href="">
+                      <button type="submit" id="rzp-button"  class="btn btn-primary btn-block free-button">Proceed</button>
+                    </a>
+                   
+                  </div>
+           </form>
+                  <!-- <style>
+                    .hide{
+                        display: none;
+                    }
+                </style>
+                  <button id="rzp-button1" class="hide">Pay with Razorpay</button> -->
+
+                  
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <%if(message){%>
+      <script>
+         Swal.fire({
+title: '<%=message%>',
+icon: 'error'
+});
+      </script>
+      <%}%>
+      <%if(messa){%>
+        <script>
+           Swal.fire({
+  title: '<%=messa%>',
+  icon: 'error'
+  });
+        </script>
+        <%}%>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+      
+      
+      
+        <script>
+          function razorpay() {
+            $.ajax({
+              url: '/razorpayConfirm',
+              type: 'get',
+              dataType: 'json',
+              contentType: 'appilaction/json',
+      
+              success: (res) => {
+                console.log(res);
+      
+                if (res.order) {
+                  
+                  var options = {
+                    "key": "rzp_test_LUtKf83zi82KPz",
+                    "amount": "<%= 100 *100 %>",
+                    "currency": "INR",
+                    "name": "Acme Corp",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": res.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                    "handler": function (response) {
+                      success()
+                    },
+                    "prefill": {
+                      "name": "Gaurav Kumar",
+                      "email": "gaurav.kumar@example.com",
+                      "contact": "9000090000"
+                    },
+                    "notes": {
+                      "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                      "color": "#3399cc"
+                    }
+                  };
+                  var rzp1 = new Razorpay(options);
+                  document.getElementById('rzp-button').onclick = function (e) {
+                    rzp1.open();
+                    e.preventDefault();
+                  }
+                }
+      
+              }
+            })
+          }
+          function success() {
+            location.href = '/razorpay'
+      
+          }
+
+        </script>
+      
+
+      <%- include('../layouts/commonfooter.ejs',{session}) %>
+    <%- include('../layouts/footer.ejs') %>

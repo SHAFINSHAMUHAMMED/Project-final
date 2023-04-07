@@ -1,0 +1,86 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+    <!-- Header Section Begin -->
+
+        <section class="shopping-cart spad">
+            <div class="container ">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 row">
+                        <div class="shopping__cart__table col-auto">
+                            <div>
+
+                                <div class="d-flex me-5" style="justify-content: space-between;">
+                                    <h4 class="p-3"><span class=""> Select Your Address</span></h4>
+                                    <div class="d-flex justify-content-center p-3">
+
+                                        <a href="/addNewAddress"> <button class=" " type="button">Add New
+                                                Address</button> </a>
+
+                                    </div>
+                                </div>
+
+                                <tbody>
+
+                                    <div class="row">
+                                        <% if (userData==undefined) { %>
+                                            <% } else { %>
+                                                <% for (let i=0; i <userData.address.length; i++) { %>
+                                                    <div class="product__cart__item">
+                                                        <div class="product__cart__item__text d-flex">
+                                                            <div class="input-group ">
+
+                                                                <div class="mb-1 d-flex">
+
+                                                                    <textarea name="address" id="inputOrgName" cols="80"
+                                                                        rows="5" class="form-control"
+                                                                        placeholder="Enter your address">
+                                                            <%=userData.address[i].username%> 
+                                                             <%=userData.address[i].address%>
+                                                            <%=userData.email%>
+                                                            <%=userData.address[i].phone%>
+                                                            <%=userData.address[i].zip%>
+                                                            </textarea>
+
+                                                                </div>
+                                                                <div class="d-flex mb-3"
+                                                                    style="justify-content: center;">
+
+                                                                    <a href="/addAddress?index=<%= i %>"> <button
+                                                                            class="ms-2" type="button">Select</button>
+                                                                    </a>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                                        <% } %>
+
+                                    </div>
+
+
+                                </tbody>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+
+
+        
+        <%- include('../layouts/commonfooter.ejs',{session}) %>
+        <%- include('../layouts/footer.ejs') %>

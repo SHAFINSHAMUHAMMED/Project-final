@@ -1,0 +1,192 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/commonhead.ejs',{session}) %>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+   
+        <div class="container-xl px-4 mt-4">
+            <form action="/editProfile" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
+                <div class="row">
+                    <div class="col-xl-4">
+
+                        <div class="card mb-4 mb-xl-0">
+                            <div class="card-header">Profile Picture</div>
+                            <div class="card-body text-center">
+                                <%if(userData.image){%>
+                                    <img src="/userProfileIMG/<%=userData.image%>" alt="avatar"
+                                        class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                    <%}else{%>
+                                        <img src="https://storage.needpix.com/rsynced_images/blank-profile-picture-973460_1280.png"
+                                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                                        <%}%>
+
+                                            <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5
+                                                MB</div>
+
+                                            <div class="btn btn-primary btn-rounded">
+                                                <label class="form-label text-white m-1" for="customFile2">Add
+                                                    Image</label>
+                                                <input type="file" name="image" class="form-control" id="customFile2" />
+                                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-8">
+
+                        <div class="card mb-4">
+                            <div class="card-header">Account Details</div>
+                            <div class="card-body">
+
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputUsername">Username</label>
+                                    <input name="username" class="form-control" id="inputUsername" type="text"
+                                        placeholder="Enter new username" value="<%=userData.username%>">
+                                </div>
+                                <%if(userData.address!='undefined'){%>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputOrgName">Address</label>
+                                        <textarea name="address" id="" cols="30" rows="5" class="form-control"
+                                            id="inputOrgName" type="text" placeholder="Enter your address"
+                                            value=""><%=userData.address.address%></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputEmailAddress">City</label>
+                                        <input name="city" class="form-control" id="inputEmailAddress" type="text"
+                                            placeholder="Enter your City" value="<%=userData.address.city%>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputEmailAddress">Zip Code</label>
+                                        <input name="zip" class="form-control" id="inputEmailAddress" type="text"
+                                            placeholder="Enter Zip Code" value="<%=userData.address.zip%>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputEmailAddress">District</label>
+                                        <input name="district" class="form-control" id="inputEmailAddress" type="text"
+                                            placeholder="Enter your District" value="<%=userData.address.district%>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputEmailAddress">State</label>
+                                        <input name="state" class="form-control" id="inputEmailAddress" type="text"
+                                            placeholder="Enter your State" value="<%=userData.address.state%>">
+                                    </div>
+
+                                    <%}else{%>
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="inputOrgName">Address</label>
+                                            <textarea name="address" id="" cols="30" rows="5" class="form-control"
+                                                id="inputOrgName" type="text" placeholder="address"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="inputEmailAddress">City</label>
+                                            <input name="city" class="form-control" id="inputEmailAddress" type="text"
+                                                placeholder="City">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="inputEmailAddress">Zip Code</label>
+                                            <input name="zip" class="form-control" id="inputEmailAddress" type="text"
+                                                placeholder="zip">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="inputEmailAddress">district</label>
+                                            <input name="district" class="form-control" id="inputEmailAddress"
+                                                type="text" placeholder="District">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="inputEmailAddress">State</label>
+                                            <input name="state" class="form-control" id="inputEmailAddress" type="text"
+                                                placeholder="State">
+                                        </div>
+                                        <%}%>
+
+                                            <div class="row gx-3 mb-3">
+
+                                                <div class="col-md-6">
+                                                    <label class="small mb-1" for="inputPhone">Phone number</label>
+                                                    <input name="phone" class="form-control" id="inputPhone" type="tel"
+                                                        placeholder="Enter your phone number"
+                                                        value="<%=userData.phone%>">
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary" id="butt" >Save changes</button>
+                                            <%if(msg!=null){ %>
+                                                <small class="text-danger">
+                                                    <%=msg%>
+                                                </small>
+                                                <%}%>
+                                                    <small class="error text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+       
+
+          
+        <script>
+            function validateForm() {
+              // get form fields
+              const username = document.getElementById("inputUsername").value;
+              const address = document.getElementById("inputOrgName").value;
+              const city = document.getElementById("inputEmailAddress").value;
+              const zip = document.getElementById("inputEmailAddress").value;
+              const district = document.getElementById("inputEmailAddress").value;
+              const state = document.getElementById("inputEmailAddress").value;
+              const phone = document.getElementById("inputPhone").value;
+            
+              // validate username (must be at least 3 characters long)
+              if (username.length < 3) {
+                alert("Username must be at least 3 characters long.");
+                return false;
+              }
+            
+              // validate address (must not be empty)
+              if (address.trim() === "") {
+                alert("Address must not be empty.");
+                return false;
+              }
+            
+              // validate city (must not be empty)
+              if (city.trim() === "") {
+                alert("City must not be empty.");
+                return false;
+              }
+            
+              // validate zip (must be a valid 5-digit zip code)
+              if (!/^\d{5}$/.test(zip)) {
+                alert("Zip code must be a valid 5-digit number.");
+                return false;
+              }
+            
+              // validate district (must not be empty)
+              if (district.trim() === "") {
+                alert("District must not be empty.");
+                return false;
+              }
+            
+              // validate state (must not be empty)
+              if (state.trim() === "") {
+                alert("State must not be empty.");
+                return false;
+              }
+            
+              // validate phone (must be a valid 10-digit US phone number)
+              if (!/^\d{10}$/.test(phone)) {
+                alert("Phone number must be a valid 10-digit number.");
+                return false;
+              }
+            
+              // all fields are valid, form can be submitted
+              return true;
+            }
+            </script>
+          
+
+
+        <%- include('../layouts/commonfooter.ejs',{session}) %>
+        <%- include('../layouts/footer.ejs') %>
