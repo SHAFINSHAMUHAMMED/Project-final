@@ -701,7 +701,7 @@ const editProduct = async (req, res) => {
           brand: prod.brand,
           description: prod.description,
           category: prod.category,
-          stocks: prod.stocks,
+          stock: prod.stock,
           price: prod.price,
           image: imagePaths
         }
