@@ -11,10 +11,10 @@
           <div class="p-5 text-center">
 
             <h3 class="mb-5 text-white">Enter OTP sent to your Email</h3>
-
-        <form action="/otpSubmit" method="post">
+            <span id="otp-countdown" style="color:red;"></span>
+        <form action="/otpSubmit" method="post " id="Otpverify">
              <div class="form-outline mb-5">
-              <input name="otp" type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="OTP" />
+              <input name="otp" type="password" id="" class="form-control form-control-lg" placeholder="OTP" />
               <% if(typeof message!='undefined'||typeof msg!='undefined'){
                 %>
                 <small class="text-success"><%= message %></small>
@@ -42,5 +42,38 @@
   background-image:url(/img/otp\ log.jpg);
 }
 </style>
+
+<script>
+// Countdown timer
+let countdown = 180; 
+
+function updateCountdown() {
+  let minutes = Math.floor(countdown / 60);
+  let seconds = countdown % 60;
+  let formatted = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  document.getElementById('otp-countdown').innerHTML = formatted;
+  countdown--;
+
+  if (countdown < 0) {
+    document.getElementById('otp-countdown').innerText = 'OTP expired.';
+    clearInterval(countdownInterval);
+    document.getElementById('Otpverify').addEventListener('submit', function(event) {
+      event.preventDefault();
+      alert('OTP has expired. Please try again!');
+      window.location.href = "/otp-login";
+    });
+  }
+}
+
+
+let countdownInterval = setInterval(updateCountdown, 1000);
+
+// Live counter
+let socket = io(); // initialize socket.io connection
+
+socket.on('otpCount', count => {
+  document.getElementById('otp-counter').innerHTML = count;
+});
+</script>
   
 <%- include('../layouts/footer.ejs') %>

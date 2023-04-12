@@ -40,7 +40,7 @@ admin_rout.post('/deleteProduct',auth.logOutSession,adminController.deleteProduc
 
 admin_rout.get('/editProduct',auth.logOutSession,adminController.loadEditPage)
 
-admin_rout.post('/editProduct',auth.logOutSession,upload.array('image',4),adminController.editProduct)
+admin_rout.post('/editProduct',auth.logOutSession,upload.array('image','image1','image2','image3',4),adminController.editProduct)
 
 admin_rout.get('/unlist',auth.logOutSession,adminController.unlistProduct)
 

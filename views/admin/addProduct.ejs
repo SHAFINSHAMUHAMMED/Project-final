@@ -101,7 +101,6 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/admin/banner">Banner</a>
                 <a class="dropdown-item" href="/admin/salesReport">Sales Report</a>
-                <a class="dropdown-item" href="#">Security</a>
               </div>
             </li>
 
@@ -126,8 +125,8 @@
       <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
         <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
           <div class="row tm-edit-product-row">
+            <form action="/admin/addProduct" method="post" class="tm-edit-product-form" id="addform"  enctype="multipart/form-data">
             <div class="col-xl-6 col-lg-6 col-md-12">
-              <form action="/admin/addProduct" method="post" class="tm-edit-product-form" id="addform"  enctype="multipart/form-data">
                 <div class="form-group mb-3 text-white">
                   <h6>Product Name</h6>
                   <input name="title" type="text" placeholder="" id="title" class="form-control"/>
@@ -271,11 +270,12 @@
   const price = document.getElementById("price");
   const description= document.getElementById("description");
   const stock = document.getElementById("stock");
-  const errorElement = document.querySelector('.error');
   const sizeInputs = document.querySelectorAll('input[name="size"]');
   const colorInputs = document.querySelectorAll('input[name="color"]');
   let sizeChecked = false;
   let colorChecked = false;
+  const errorElement = document.querySelector('.error');
+
 
   form.addEventListener('submit', (e) => {
   let messages = '';

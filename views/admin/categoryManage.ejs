@@ -102,7 +102,6 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/admin/banner">Banner</a>
                 <a class="dropdown-item" href="/admin/salesReport">Sales Report</a>
-                <a class="dropdown-item" href="#">Security</a>
               </div>
             </li>
 
@@ -157,7 +156,7 @@
                             <option selected>Select Category</option>
                             <% if(category.length>0){
                               for(let i=0;i<category.length;i++){ %>
-                                <option value="<%=category[i].category%>">
+                                <option value="<%=category[i]._id%>">
                                   <%=category[i].category%>
                                 </option>
                                 <% } } %>
@@ -230,7 +229,6 @@
           </script>
         <%}%>
 
-    //  for delete category button
         <script>
       const deleteButton = document.querySelector('#deleteCategory button');
 

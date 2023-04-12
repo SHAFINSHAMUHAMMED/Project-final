@@ -102,7 +102,6 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a class="dropdown-item" href="/admin/banner">Banner</a>
                       <a class="dropdown-item" href="/admin/salesReport">Sales Report</a>
-                      <a class="dropdown-item" href="#">Security</a>
                     </div>
                   </li>
     
@@ -126,10 +125,10 @@
             <!-- row -->
 
             <div class="col-12 tm-block-col">
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end mb-3 mt-5">
                     <form>
                         <input class="bg-dark text-white" type="text"  name="search">
-                        <input type="submit" class="btn btn-primary" value="Search">
+                        <input type="submit" class=" btn-primary" value="Search">
                     </form>
                 </div>
                 <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
@@ -174,26 +173,29 @@
                                         <td>
                                             <%=product[i].category%>
                                         </td>
-                                        <td class="d-flex justify-content-center">
+                                        <td >
+                                          <div class="d-flex justify-content-center">
+                                          <div>
                                             <a href="/admin/editProduct?id=<%=product[i]._id%>"><button type="button"
-                                                    class="btn btn-primary btn-sm  rounded-pill d-flex justify-content-center  " style="width: 20px; "> <span>Edit</span> </button></a>
-                                                    <div>
+                                                    class=" btn-primary me-1 d-flex justify-content-center  " style="width: 60px; height: 30px;"> <span class="mt-1">Edit</span> </button></a>
+                                                  </div>
+   <div>                                                    
   <form action="/admin/deleteProduct" method="post" id="deleteProduct_<%=product[i]._id%>">
     <input type="hidden" name="delete" value="<%=product[i]._id%>">
-    <button class="btn btn-danger btn-sm rounded-pill d-flex justify-content-center delete-button" type="submit" style="width: 20px;" data-product-id="<%=product[i]._id%>"> <span>Delete</span> </button>
+    <button class=" btn-danger  d-flex justify-content-center delete-button me-1" type="submit"  data-product-id="<%=product[i]._id%>"  style="width: 60px; height: 30px;"> <span class="mt-1">Delete</span> </button>
   </form>
 </div>
-
-
-
-<%if(product[i].unlisted===0){%>
-<a href="/admin/unlist?id=<%=product[i]._id%>"><button type="button"
-                                                    class="btn btn-primary btn-sm  rounded-pill d-flex justify-content-center " style="width: 20px; "> <span class="text-white">Unlist</span> </button></a>
+                                          <div>
+                                           <%if(product[i].unlisted===0){%>
+    
+                                                  <a href="/admin/unlist?id=<%=product[i]._id%>"><button type="button"
+                                                    class="d-flex justify-content-center me-1 " style="width: 60px; height: 30px; background-color: rgb(31, 117, 237); border: none;"> <span class="text-white mt-1" >Unlist</span> </button></a>
                                                     <%}else{%>
                                                         <a href="/admin/list?id=<%=product[i]._id%>"><button type="button"
-                                                    class="btn btn-success btn-sm  rounded-pill d-flex justify-content-center " style="width: 20px; "> <span class="text-white">List</span> </button></a>
+                                                    class=" btn-success   d-flex justify-content-center me-1 " style="width: 60px; height: 30px;"> <span class="text-white mt-1">List</span> </button></a>
                                                     <%}%>
-
+                                                  </div>
+                                                </div>
                                         </td>
                                     </tr>
                                 </div>

@@ -1,10 +1,6 @@
 <%- include('../layouts/adminheader.ejs') %>
-
-<style>
-  body {
-    padding: 3rem;
-  }
-</style>
+<body class="bdy" id="reportsPage">
+<div class="" id="home">
 <nav class="navbar navbar-expand-xl">
   <div class="container h-100 ">
     <a class="navbar-brand me-3" href="/admin/home">
@@ -104,7 +100,6 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/admin/banner">Banner</a>
             <a class="dropdown-item" href="/admin/salesReport">Sales Report</a>
-            <a class="dropdown-item" href="#">Security</a>
           </div>
         </li>
 
@@ -127,51 +122,78 @@
   <div class="row">
     <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
       <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+        <form action="/admin/editProduct?id=<%=product[0]._id%>" method="post"  enctype="multipart/form-data" id="editform">
         <div class="row tm-edit-product-row">
+          <div class="tm-edit-product-form ">
+          <div class="d-flex-col">
           <div class="col-xl-6 col-lg-6 col-md-12">
-            <form action="/admin/editProduct?id=<%=product[0]._id%>" method="post" class="tm-edit-product-form"  enctype="multipart/form-data">
               <div class="form-group mb-3">
                   <label for="">Name</label>
-                <input name="title" type="text" value="<%=product[0].title%>" class="form-control"/>
+                <input name="title" type="text" id="title" value="<%=product[0].title%>" class="form-control"/>
               </div>
               <div class="form-group mb-3">
                   <label for="">Brand</label>
-                <input name="brand" type="text" value="<%= product[0].brand %>" class="form-control"/>
+                <input name="brand" type="text" id="brand" value="<%= product[0].brand %>" class="form-control"/>
               </div>
               <div class="form-group mb-3">
                   <label for="">Description</label>
-                <input name="description" type="text" value="<%= product[0].description %>" class="form-control"/>
+                <input name="description" type="text" id="description" value="<%= product[0].description %>" class="form-control"/>
               </div>
               <div class="form-group mb-3">
                   <label for="">Price</label>
-                <input name="price" type="float" value="<%= product[0].price %>" class="form-control"/>
+                <input name="price" type="float" id="price" value="<%= product[0].price %>" class="form-control"/>
               </div>
               <div class="form-group mb-3">
                   <label for="">Stock</label>
-                <input name="stock" type="number" value="<%= product[0].stock %>" class="form-control"/>
+                <input name="stock" type="number" id="stock" value="<%= product[0].stock %>" class="form-control"/>
               </div>
               <div class="form-group mb-3">
                 <label for="category">Category</label>
                 <select name="category" class="custom-select tm-select-accounts" id="category">
-                 <%
-                    if(category.length>0){
-                       for(let i=0;i<category.length;i++){
-                 %>
-                    <option value="<%=product[0].category%>"><%=category[i].category%></option>
-                        <% }
-                 } %>
-                </select>
+    <% if(category.length > 0) {
+           for(let i=0; i<category.length; i++) { %>
+            <option value="<%=category[i].category%>" <% if(product[0].category === category[i].category) { %> selected <% } %>><%=category[i].category%></option>
+        <% }
+       } %>
+</select>
+
               </div> 
           </div>
-          <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-            <div>
-              
-              <div class="d-flex justify-content-center">
-                  <div class="btn btn-dark btn-rounded">
-                      <img src="/proImage/<%=product[0].image[0]%>" alt="">
-                      <input value="/proImage/<%=product[0].image[0]%>" type="file" name="image" class="form-control mt-2" id="customFile2" multiple />
-                  </div>
-              </div>
+          <div class="col 12">
+  <div class="bg-dark d-flex justify-content-center">
+    <div class="row mt-4">
+      <div class="col-5 ms-5">
+        <h6 class="text-white mb-3">image 1</h6>
+        <img style="width: 50px; height: 60px;" src="/proImage/<%=product[0].image[0]%>" alt="">
+        <input value="/proImage/<%=product[0].image[0]%>" type="file" name="image" class=" mt-2 mb-3" onchange="return fileValidation('customFile2')" id="customFile2" />
+        <label><input type="checkbox" name="updateImage" value="0"> Update image</label>
+      </div>
+      <div class="col-5 ms-5">
+        <h6 class="text-white mb-3">image 2</h6>
+        <img style="width: 50px; height: 60px;" src="/proImage/<%=product[0].image[1]%>" alt="">
+        <input value="/proImage/<%=product[0].image[1]%>" type="file" name="image" class=" mt-2 mb-3" onchange="return fileValidation('customFile3')" id="customFile3" />
+        <label><input type="checkbox" name="updateImage" value="1"> Update image</label>
+      </div>
+      <div class="col-5 ms-5">
+        <h6 class="text-white mb-3">image 3</h6>
+        <img style="width: 50px; height: 60px;" src="/proImage/<%=product[0].image[2]%>" alt="">
+        <input value="/proImage/<%=product[0].image[2]%>" type="file" name="image" class=" mt-2 mb-3" onchange="return fileValidation('customFile4')" id="customFile4" />
+        <label><input type="checkbox" name="updateImage" value="2"> Update image</label>
+      </div>
+      <div class="col-5 ms-5">
+        <h6 class="text-white mb-3">image 4</h6>
+        <img style="width: 50px; height: 60px;" src="/proImage/<%=product[0].image[3]%>" alt="">
+        <input value="/proImage/<%=product[0].image[3]%>" type="file" name="image" class=" mt-2 mb-3" onchange="return fileValidation('customFile5')" id="customFile5" />
+        <label><input type="checkbox" name="updateImage" value="3"> Update image</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
           </div>
           <div class="mt-4">
             <p class="p-0 m-0">SIZE</p>
@@ -225,30 +247,73 @@
 
           </div>
         </div>
-              
+      
           </div>
-          <div class="col-6 mb-4">
-            <button type="submit" class="btn btn-dark text-uppercase">Update Product Now</button>
+        </div>
+           
+          <div class="col-12 col-md-6 mb-4">
+            <button type="submit" class="btn btn-dark text-uppercase "><span class=""> Update Product Now</span></button>
           </div>
         </form>
-        <form action="/admin/addCategory" method="post">
-          <div class="row">
+        <small class="text-danger error"></small>
             <div class="col-6">
-              <input class="form-control text-white" type="text" name="newcategory"  placeholder="New Category"><br>
-              <button class="btn btn-dark text-uppercase" type="submit">Add New Category</button>
+              <a href="/admin/category">  <button class=" btn-dark text-uppercase ">Add New Category</button></a>
             </div>
-          </div>
-         </form>
+      </div>
+       
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>
+
+<script>
+  
+  function validateFiles() {
+  var errorMessage = "";
+  var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+  for (var j = 2; j <= 5; j++) {
+    var fileInput = document.getElementById('customFile' + j);
+    if (fileInput) {
+      var files = fileInput.files;
+      console.log(files,'dfghjkl');
+      // Loop through each file and validate
+      for (var i = 0; i < files.length; i++) {
+        var filePath = files[i].name;
+        if (!allowedExtensions.exec(filePath)) {
+          errorMessage += files[i].name + " is an invalid file type.\n";
+        }
+      }
+
+      if (errorMessage !== "") {
+        alert(errorMessage);
+        fileInput.value = '';
+        return false;
+      } else {
+        // Display image preview
+        for (var i = 0; i < files.length; i++) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            var img = document.createElement('img');
+            img.src = e.target.result;
+            document.getElementById('imagePreview').appendChild(img);
+          };
+          reader.readAsDataURL(files[i]);
+        }
+        return true;
+      }
+    }
+  }
+}
 
 
 
-  <script>
+document.querySelectorAll('input[type="checkbox"][name="size"]').forEach((checkbox) => {
+  checkbox.addEventListener('change', () => {
+    atLeastOneChecked = document.querySelectorAll('input[type="checkbox"][name="size"]:checked').length > 0;
+  });
+});
+
   
   const form = document.getElementById("editform");
   const title = document.getElementById("title");
@@ -258,39 +323,43 @@
   const stock = document.getElementById("stock");
   const sizeInputs = document.querySelectorAll('input[name="size"]');
   const colorInputs = document.querySelectorAll('input[name="color"]');
+  const images = [];
+
+  images.push(document.getElementById('customFile2'));
+  images.push(document.getElementById('customFile3'));
+  images.push(document.getElementById('customFile4'));
+  images.push(document.getElementById('customFile5'));
+ 
+
   let sizeChecked = false;
   let colorChecked = false;
   const errorElement = document.querySelector('.error');
 
   form.addEventListener('submit', (e) => {
-  let messages = [];
+  let messages = '';
   
   if (title.value.trim().length===0) {
-    messages.push('Name is required');
+    messages='Name is required';
   }
 
   if (brand.value.trim().length===0) {
-    messages.push('Brand is required');
+    messages='Brand is required';
   }
 
   if(price.value.toString().trim().length===0) {
-    messages.push('Price is required');
+    messages='Price is required';
   }
 
   
   if (description.value.trim().length===0) {
-    messages.push('description is required');
+    messages='description is required';
   }
 
   
   if (stock.value.toString().trim().length===0) {
-    messages.push('stock is required');
+    messages='stock is required';
   }
 
-  if (messages.length > 0) {
-    e.preventDefault();
-    errorElement.innerText = messages.join(', ');
-  }
   sizeInputs.forEach(input => {
     if (input.checked) {
       sizeChecked = true;
@@ -305,59 +374,42 @@
     e.preventDefault();
     messages = 'Choose color and size'
   }
-  if (messages.length > 0) {
-    e.preventDefault();
-    errorElement.innerText = messages;
+  // if (!image1.files[0] || !image2.files[0] || !image3.files[0] || !image4.files[0]) {
+  //   messages = 'Please choose images';
+  // }
+  const selectedFiles = [];
+const checkboxes = document.querySelectorAll('input[name="updateImage"]');
+let checkedCount = 0;
+
+images.forEach(function(imageInput) {
+  if (imageInput.files.length > 0) {
+    selectedFiles.push(imageInput.files[0]);
   }
+});
+
+checkboxes.forEach((checkbox) => {
+  if (checkbox.checked) {
+    checkedCount++;
+  }
+});
+
+if (selectedFiles.length > 0 && checkedCount !== selectedFiles.length) {
+  // If an image is selected but not all corresponding checkboxes are checked, show an error message
+  messages = "Please check the boxes for all selected images.";
+}
+
+console.log(selectedFiles);
+if (messages.length > 0) {
+  e.preventDefault();
+  errorElement.innerText = messages;
+}
+
 });
 
   
 </script>
+   
 
-<script>
-  function fileValidation() {
-  var fileInput = document.getElementById('customFile2');
-  var files = fileInput.files;
-  var errorMessage = "";
-
-  var allowedExtensions =
-    /(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i;
-
-  // Loop through each file and validate
-  for (var i = 0; i < files.length; i++) {
-    var filePath = files[i].name;
-
-    if (!allowedExtensions.exec(filePath)) {
-      errorMessage += files[i].name + " is an invalid file type.\n";
-    }
-  }
-
-  if (errorMessage !== "") {
-    alert(errorMessage);
-    fileInput.value = '';
-    return false;
-  } else {
-    // Display image preview
-    for (var i = 0; i < files.length; i++) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        var img = document.createElement('img');
-        img.src = e.target.result;
-        document.getElementById('imagePreview').appendChild(img);
-      };
-
-      reader.readAsDataURL(files[i]);
-    }
-  }
-}
-
-document.querySelectorAll('input[type="checkbox"][name="size"]').forEach((checkbox) => {
-  checkbox.addEventListener('change', () => {
-    atLeastOneChecked = document.querySelectorAll('input[type="checkbox"][name="size"]:checked').length > 0;
-  });
-});
-
-</script>
 
   <%- include('../layouts/adminfooter.ejs') %>
 

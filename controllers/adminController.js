@@ -12,6 +12,7 @@ const swal = require("sweetalert2");
 const moment = require('moment');
 const bcrypt = require("bcrypt");
 const { CURSOR_FLAGS } = require("mongodb");
+const nodemailer = require("nodemailer");
 
 let msg;
 let message;
@@ -479,6 +480,7 @@ const loadProducts = async (req, res) => {
         ],
       })
       .countDocuments();
+      console.log(products);
     res.render("products", {
       product: products,
       message,
@@ -545,7 +547,6 @@ const loadEditPage = async (req, res) => {
     const products = await productSchema
       .find({ _id: new Object(id) })
       .populate("category");
-    console.log(products);
     const category = await categorySchema.find();
     res.render("editProduct", { product: products, category: category, msg });
     msg = null;
@@ -646,72 +647,78 @@ const addProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-      const prod = req.body
-      const id = req.query.id
-      if (prod.title.trim().length == 0 || 
-      prod.price.toString().trim().length == 0 || 
-      prod.stock.toString().trim().length == 0 || 
-      prod.stock<=0||
-      !req.files ||
-      req.files.length <4 ||
-      req.files.some((file) => file.mimetype.split("/")[0] !== "image") ||
-      prod.category.length == 0 || 
-      prod.brand.trim().length == 0 ||
-      prod.description.trim().length == 0 || 
-      prod.size.length == 0 ||
-      prod.color.length == 0) {
-          msg = 'Fields Should Not Be Empty'
-          res.redirect('/admin/products')
-      } else {
-          let newprod
-          if (req.files !== 0) {
-              let image = req.files.map(file => file);
-              for (i = 0; i < image.length; i++) {
-                  let path = image[i].path
-                  const processImage = new Promise((resolve, reject) => {
-                      sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename,(err) => {
-                          sharp.cache(false);
-                          if (err) {
-                              console.log(err);
-                              reject(err);
-                          } else {
-                              console.log(`Processed file: ${path}`);
-                              resolve();
-                          }
-                      })
-                  });
-                  processImage.then(() => {
-                      fs.unlink(path, (err) => {
-                          if (err) {
-                              console.log(err);
-                          } else {
-                              console.log(`Deleted file: ${path}`);
-                          }
-                      });
-                  }).catch((err) => {
-                      console.log(err);
-                  });
-                  
+    const prod = req.body;
+    const id = req.query.id;
+    const product = await productSchema.findById(id);
+    const selectedImagePositions = prod.updateImage; // User-selected image positions
+
+    if (prod.title.trim().length == 0 || 
+        prod.price.toString().trim().length == 0 || 
+        prod.stock.toString().trim().length == 0 || 
+        prod.stock <= 0 ||
+        prod.category.length == 0 || 
+        prod.brand.trim().length == 0 ||
+        prod.description.trim().length == 0 || 
+        prod.size == undefined ||
+        prod.color == undefined) {
+      msg = 'Fields Should Not Be Empty';
+      res.redirect('/admin/products');
+    } else {
+      let imagePaths = product.image;
+      let images = req.files.map(file => file);
+      // Update only the selected images
+      if (selectedImagePositions!=undefined) {
+        imagePaths = await Promise.all(imagePaths.map(async (path, i) => { 
+          if (selectedImagePositions.includes(i.toString())) {
+            const image = images[selectedImagePositions.indexOf(i.toString())];
+        
+            if (image && image.mimetype.split("/")[0] !== "image") {
+              msg = 'Invalid file type';
+              res.redirect('/admin/products');
+              return path;
+            } else if (image) {
+              const newPath = 'public/proImage/' + image.filename;
+              await sharp(image.path).rotate().resize(270, 360).toFile(newPath);
+              try {
+                await fs.promises.unlink(image.path);
+                console.log(`Deleted file: ${image.path}`);
+              } catch (error) {
               }
-              newprod = await productSchema.updateOne({ _id: new Object(id) }, {
-                  $set: {
-                      title: prod.title,
-                      brand: prod.brand,
-                      description: prod.description,
-                      category: prod.category,
-                      stocks: prod.stocks,
-                      price: prod.price,
-                      image: req.files.map(file => file.filename)
-                  }
-              })
-          } 
-          message = 'Product Updated Successfully'
-          res.redirect('/admin/products')
+        
+              // Only update the image path if the user has selected a file
+              if (image.size > 0) {
+                return image.filename;
+              }
+            }
+          }
+          return path;
+        }));
+      }
+
+      await productSchema.updateOne({ _id: id }, {
+        $set: {
+          title: prod.title,
+          brand: prod.brand,
+          description: prod.description,
+          category: prod.category,
+          stocks: prod.stocks,
+          price: prod.price,
+          image: imagePaths
         }
-    } catch (error) {
-        console.log(error);
+      });
+      
+      message = 'Product Updated Successfully';
+      res.redirect('/admin/products');
+    }
+  } catch (error) {
+    console.log(error);
   }
-}
+};
+
+
+
+
+
 
 ////////////ADD CATEGORY///////////////
 
@@ -741,8 +748,10 @@ const addCategory = async (req, res) => {
 
 const editCategory = async (req, res) => {
   try {
-    const oldCat = req.body.category;
-    const newCat = req.body.editedCategory;
+    let oldCat = req.body.category;
+    let newCat = req.body.editedCategory;
+    newCat=newCat.toString()
+    console.log(newCat,'newww');
     const checkNew = await categorySchema.findOne({ category: newCat });
     if (newCat.trim().length === 0) {
       res.redirect("/admin/category");
@@ -752,10 +761,8 @@ const editCategory = async (req, res) => {
         res.redirect("/admin/category");
         msg = "Already Exist";
       } else {
-        await categorySchema.updateOne(
-          { category: oldCat },
-          { category: newCat }
-        );
+        await categorySchema.findOneAndUpdate({_id:oldCat},{$set:{ category: newCat }})
+        await productSchema.updateMany({categoryid:oldCat},{$set:{category:newCat}})
         message = "Category Updated Successfully";
         res.redirect("/admin/Category");
       }
@@ -862,6 +869,8 @@ const acceptOrder = async (req, res) => {
 
 ///Confirm Delivery/////
 
+const PDFDocument = require('pdfkit');
+
 const acceptDelivery = async (req, res) => {
   try {
     const orderId = req.query.orderid;
@@ -877,11 +886,71 @@ const acceptDelivery = async (req, res) => {
         }
       );
 
+      // Generate the invoice PDF
+      const doc = new PDFDocument();
+      ///content
+      doc.text('Invoice', { align: 'center', fontSize: 20 });
+      doc.text('Order ID: ' + order.orderId);
+      doc.text('Delivered Date: ' + new Date().toLocaleDateString());
+      doc.text('Order Amount: ' + order.grandTotal);
+      doc.text('Name: ' + order.address[0].username);
+      doc.text('Order Address: ' + order.address[0].address);
+      doc.text('Order Phone: ' + order.address[0].phone);
+      doc.text('Order Phone: ' + order.paymentType);
+
+
+      const invoiceBuffer = await new Promise((resolve, reject) => {
+        const buffers = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+          resolve(Buffer.concat(buffers));
+        });
+        doc.end();
+      });
+
+      // Send Delivery email with invoice attachment
+      const userId = order.userId;
+      const user = await userSchema.findOne({ _id: userId });
+      const email = user.email;
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'codershafinsha@gmail.com',
+          pass: process.env.EMAILPASS,
+        },
+      });
+
+      const mailOption = {
+        from: 'codershafinsha@gmail.com',
+        to: email,
+        subject: 'Order Status',
+        html: `<h6>Hii ${user.username},</h6>  <p> Your Order is Delivered Succesfully.</p>`,
+        attachments: [
+          {
+            filename: 'invoice.pdf',
+            content: invoiceBuffer,
+            contentType: 'application/pdf',
+          },
+        ],
+      };
+
+      transporter.sendMail(mailOption, (error, info) => {
+        if (error) {
+          console.log(error.message);
+          console.log('Email could not be sent');
+        } else {
+          console.log('Email has been sent:', info.response);
+        }
+      });
+
       const updatedOrder = await orderSchema.findOne({ _id: orderId });
       if (
         updatedOrder.is_delivered === true &&
         (updatedOrder.admin_reject === 1 || updatedOrder.admin_reject === 0)
       ) {
+        // Create Sales Report
         let product = [];
         let totalprice = 0;
         updatedOrder.item.forEach((item) => {
@@ -894,14 +963,23 @@ const acceptDelivery = async (req, res) => {
           products: product,
           totalSales: totalprice,
           totalItemsSold: product.length,
-          userId:updatedOrder.userId,
-          location:updatedOrder.address[0].city
+          userId: updatedOrder.userId,
+          location: updatedOrder.address[0].city,
         });
         await newSalesReport.save();
       }
-      res.redirect("/admin/home");
-      message = "Orderd status changed successfully";
+      res.redirect('/admin/home');
+      message = 'Order status changed successfully';
     }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+      ///Invoice page////
+const invoice = async (req, res) => {
+  try {
+    res.render("/admin/invoice");
   } catch (error) {
     console.log(error.message);
   }
@@ -992,6 +1070,7 @@ const CouponGenerate = async (req, res) => {
     } else {
       res.render("coupon", { message, msg });
       message = null;
+      msg=null
     }
   } catch (error) {
     console.log(error);
@@ -1009,7 +1088,7 @@ const addCoupon = async (req, res) => {
       maxAmt: parseInt(couponData.maxAmount),
       discount: parseInt(couponData.discount),
     });
-    const check = await couponSchema.findOne({ coupon: couponData.couponId });
+    const check = await couponSchema.findOne({ couponId: couponData.couponId });
     if (
       couponData.couponId.trim().length === 0 ||
       couponData.expiryDate.toString().trim().length === 0 ||

@@ -6,7 +6,7 @@
     </div>
 
         <div class="container-xl px-4 mt-4 mb-5">
-            <form action="/addNewAddress" method="post">
+            <form action="/postNewAddress" method="post" id="addressform">
                 <div class="row justify-content-center">
 
                     <div class="col-xl-10">
@@ -17,33 +17,33 @@
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputUsername">Username</label>
-                                    <input name="username" class="form-control" id="inputUsername" type="text"
+                                    <input name="username" id="username" class="form-control"  type="text"
                                         placeholder="Enter new username">
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputOrgName">Address</label>
-                                    <textarea name="address" id="" cols="30" rows="5" class="form-control"
-                                        id="inputOrgName" type="text" placeholder="Enter your address"></textarea>
+                                    <textarea name="address" id="address" cols="30" rows="5" class="form-control"
+                                         type="text" placeholder="Enter your address"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputEmailAddress">City</label>
-                                    <input name="city" class="form-control" id="inputEmailAddress" type="text"
+                                    <input name="city" class="form-control" id="city" type="text"
                                         placeholder="Enter your City">
                                 </div>
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputEmailAddress">Zip Code</label>
-                                    <input name="zip" class="form-control" id="inputEmailAddress" type="text"
+                                    <input name="zip" class="form-control" id="zip" type="text"
                                         placeholder="Enter Zip Code">
                                 </div>
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputEmailAddress">District</label>
-                                    <input name="district" class="form-control" id="inputEmailAddress" type="text"
+                                    <input name="district" class="form-control" id="district" type="text"
                                         placeholder="Enter your District">
                                 </div>
                                 <div class="mb-3">
                                     <label class="small mb-1" for="inputEmailAddress">State</label>
-                                    <input name="state" class="form-control" id="inputEmailAddress" type="text"
+                                    <input name="state" class="form-control" id="state" type="text"
                                         placeholder="Enter your State">
                                 </div>
 
@@ -51,11 +51,11 @@
 
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputPhone">Phone number</label>
-                                        <input name="phone" class="form-control" id="inputPhone" type="tel"
+                                        <input name="phone" class="form-control" id="phone" type="tel"
                                             placeholder="Enter your Alt phone number">
                                     </div>
+                                    <small class="text-danger error mt-3"></small>
                                 </div>
-
                                 <button class="btn btn-primary" type="submit">Save Address</button>
                             </div>
                         </div>
@@ -64,6 +64,62 @@
             </form>
         </div>
 
-
+        
         <%- include('../layouts/commonfooter.ejs',{session}) %>
         <%- include('../layouts/footer.ejs') %>
+        <script>
+            window.addEventListener('load', function() {
+            // get the form element
+const addressForm = document.getElementById('addressform');
+
+// add an event listener to the form's submit event
+addressForm.addEventListener('submit', function(event) {
+  // prevent the form from submitting by default
+  event.preventDefault();
+
+  // get the form fields
+  const username = document.getElementById('username');
+  const address = document.getElementById('address');
+  const city = document.getElementById('city');
+  const zip = document.getElementById('zip');
+  const district = document.getElementById('district');
+  const state = document.getElementById('state');
+  const phone = document.getElementById('phone');
+
+  const errorElement = document.querySelector('.error');
+  let hasErrors = false;
+  if (username.value.trim().length === ''||username.value.trim().length < 2) {
+    hasErrors = true;
+    errorElement.textContent = 'UserName must be between 3 and 16 characters long.';
+  }
+  if (address.value.trim() === ''||address.value.trim().length<5||address.value.trim().length>40) {
+    hasErrors = true;
+    errorElement.textContent = 'Address must be between 5 and 40 characters long.';
+  }
+  if (city.value.trim() === ''||city.value.trim().length<3||city.value.trim().length>16) {
+    hasErrors = true;
+    errorElement.textContent = 'City must be between 3 and 16 characters long.';
+  }
+  if (zip.value.trim() === '' || !/^\d{5,6}$/.test(zip.value.trim())) {
+    hasErrors = true;
+    errorElement.textContent = 'Please enter a valid zip code';
+  }
+  if (district.value.trim() === ''||district.value.trim().length<3||district.value.trim().length>16) {
+    hasErrors = true;
+    errorElement.textContent = 'District must be between 3 and 16 characters long.';
+  }
+  if (state.value.trim() === ''||state.value.trim().length<3||state.value.trim().length>16) {
+    hasErrors = true;
+    errorElement.textContent = 'State must be between 3 and 16 characters long.';
+  }
+  if (phone.value.trim() !== '' && !/^\d{10}$/.test(phone.value.trim())) {
+    hasErrors = true;
+    errorElement.textContent = 'Please enter a valid phone number';
+  }
+  if (!hasErrors) {
+    addressForm.submit();
+  }
+});
+});
+
+          </script>

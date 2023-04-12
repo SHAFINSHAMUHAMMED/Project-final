@@ -88,6 +88,12 @@
 
         <section class="shopping-cart spad">
             <div class="container ">
+              <% if(cartProducts==null){ %>
+                <div class="d-flex justify-content-center">
+                  <img  src="https://vividparts.com/site_assets/images/empty_cart.gif" alt="">
+                </div>             
+                <% }%>
+             
                 <div class="row ">
                     <div class="col-lg-8">
                       
@@ -95,9 +101,7 @@
                             <table class="table table-responsive ">
                                 <thead>
                                   <% if(cartProducts==null){ %>
-                                    <div class="d-flex justify-content-end">
-                                    <img  src="https://vividparts.com/site_assets/images/empty_cart.gif" alt="">
-                                  </div>
+                                   
                                     <% }else{ %>
                                     <tr>
                                         <th>Product</th>
@@ -170,7 +174,7 @@
                         <div class="row">
                           <div class="col-lg-6 col-md-6 col-sm-6">
                               <div class="continue__btn">
-                                  <a href="#">Continue Shopping</a>
+                                  <a href="/shopPage">Continue Shopping</a>
                               </div>
                           </div>
                           <div class="col-lg-6 col-md-6 col-sm-6">

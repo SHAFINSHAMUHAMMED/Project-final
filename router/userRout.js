@@ -62,7 +62,9 @@ user_route.get('/address',auth.logOutSession,userController.address)
 
 user_route.get('/addAddress',auth.logOutSession,userController.checkout)
 
-user_route.post('/addNewAddress',auth.logOutSession,userController.addNewAddress)
+user_route.get('/deleteAddress',auth.logOutSession,userController.deleteAddress)
+
+user_route.post('/postNewAddress',auth.logOutSession,userController.addNewAddress)
 
 user_route.get('/addNewAddress',auth.logOutSession,userController.getNewAddress)
 
@@ -109,6 +111,8 @@ user_route.get('/razorpayConfirm',auth.logOutSession,userController.razorpayConf
 user_route.get('/razorpay',auth.logOutSession, userController.razorpay)
 
 user_route.post('/message',auth.logOutSession,userController.sendMessage)
+
+user_route.get('/returnPolicy',userController.returnPolicy)
 
 user_route.get("*",function(req,res){res.render("errorpage")})
 

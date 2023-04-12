@@ -54,8 +54,8 @@ const orderSchema = mongoose.Schema({
         type:Array
       },
       date:{
-        type:Date,
-        required:true
+        type:String,
+        required:true,
       },
       delivered_date:{
         type:Date
@@ -71,6 +71,9 @@ const orderSchema = mongoose.Schema({
       paymentType:{
         type:String,
         require:true
+      },
+      orderId:{
+        type:String
       }
 })
 

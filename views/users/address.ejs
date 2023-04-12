@@ -1,6 +1,97 @@
 <%- include('../layouts/header.ejs') %>
 <%- include('../layouts/commonhead.ejs',{session}) %>
 
+    <style>
+        .shopping-cart {
+  background-color: #f7f7f7;
+  padding: 50px 0;
+}
+
+.shopping__cart__table {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.product__cart__item {
+  border-bottom: 1px solid #dddddd;
+  padding: 20px 0;
+}
+
+.product__cart__item__text {
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
+}
+
+.form-control {
+  border: none;
+  background-color: #c0dcf87f;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  color: #333333;
+  height: 100%;
+}
+
+button {
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #555555;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 767px) {
+  .shopping__cart__table {
+    padding: 10px;
+  }
+
+  .form-control {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .form-control {
+    font-size: 14px;
+  }
+}
+
+    </style>    
+
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -13,16 +104,23 @@
                     <div class="col-lg-8 row">
                         <div class="shopping__cart__table col-auto">
                             <div>
-
                                 <div class="d-flex me-5" style="justify-content: space-between;">
                                     <h4 class="p-3"><span class=""> Select Your Address</span></h4>
+                                    <% console.log(userData.address.length); %>
+                                    <% if(userData.address.length>4) {%>
                                     <div class="d-flex justify-content-center p-3">
-
-                                        <a href="/addNewAddress"> <button class=" " type="button">Add New
-                                                Address</button> </a>
-
+                                      <button class="" type="button" onclick="addNewAddress()">Add New Address</button>
                                     </div>
-                                </div>
+                                    <% }else{ %>
+                                      <div class="d-flex justify-content-center p-3">
+                                        <a href="/addNewAddress">
+                                        <button class="" type="button">Add New Address</button>
+                                      </a>
+                                      </div>
+                                      <% } %>
+                                  </div>
+                                  
+                                  
 
                                 <tbody>
 
@@ -34,17 +132,17 @@
                                                         <div class="product__cart__item__text d-flex">
                                                             <div class="input-group ">
 
-                                                                <div class="mb-1 d-flex">
-
-                                                                    <textarea name="address" id="inputOrgName" cols="80"
-                                                                        rows="5" class="form-control"
-                                                                        placeholder="Enter your address">
-                                                            <%=userData.address[i].username%> 
-                                                             <%=userData.address[i].address%>
-                                                            <%=userData.email%>
-                                                            <%=userData.address[i].phone%>
+                                                                <div class="mb-1  d-flex justify-content-center  ">
+                                                                    <div class="m-5">
+                                                                    <div name="address" id="inputOrgName" class="form-control d-flex justify-content-center text-center"
+                                                                        placeholder="Enter your address" style="width: 400px;"><span>
+                                                            <%=userData.address[i].username%> <br>
+                                                             <%=userData.address[i].address%> <br>
+                                                            <%=userData.email%> <br>
+                                                            <%=userData.address[i].phone%> <br>
                                                             <%=userData.address[i].zip%>
-                                                            </textarea>
+                                                        </span> </div>
+                                                        </div>
 
                                                                 </div>
                                                                 <div class="d-flex mb-3"
@@ -53,6 +151,9 @@
                                                                     <a href="/addAddress?index=<%= i %>"> <button
                                                                             class="ms-2" type="button">Select</button>
                                                                     </a>
+                                                                    <a href="/deleteAddress?index=<%= i %>"> <button
+                                                                        class="ms-2" type="button">Delete</button>
+                                                                </a>
 
 
                                                                 </div>
@@ -80,7 +181,25 @@
             </div>
         </section>
 
-
-        
+        <%if(message){%>
+            <script>
+               Swal.fire({
+  title: '<%=message%>',
+  icon: 'success',
+  confirmButtonText: 'Ok'
+});
+            </script>
+            <%}%>
+            <script>                       
+                function addNewAddress() {
+                  msg='You have reached the maximum number of addresses.'
+                    Swal.fire({
+                      title: msg,
+                      icon: 'error',
+                      confirmButtonText: 'Ok'
+                    });
+                                    
+                }
+                </script>
         <%- include('../layouts/commonfooter.ejs',{session}) %>
         <%- include('../layouts/footer.ejs') %>

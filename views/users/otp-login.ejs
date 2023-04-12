@@ -12,28 +12,28 @@
 
             <h3 class="mb-5 text-white">OTP Login</h3>
 
-        <form action="/otpVerifyMail" method="post">
-             <div class="form-outline mb-5">
-              <input name="email" type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email" />
-              <% 
-              if(typeof message!='undefined'||typeof msg!='undefined'){
+            <form action="/otpVerifyMail" method="post">
+              <div class="form-outline mb-5">
+                <input name="email" type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email" />
+                <% 
+                if(typeof message!='undefined'||typeof msg!='undefined'){
+                  %>
+                  <small class="text-success"><%= message %></small>
+                  <small class="text-danger"><%= msg %></small>
+                  <%
+                } 
                 %>
-                <small class="text-success"><%= message %></small>
-                <small class="text-danger"><%= msg %></small>
-                <%
-             } 
-                %>
+              </div>
+
+              <div class="d-grid gap-2 col-sm-6 mx-auto mb-4">
+                <button class="btn btn-block btn-secondary" type="submit">Sent OTP </button>
+              </div>
+
+            </form>
+
+            <div class="d-grid gap-2 col-sm-6 mx-auto mb-4">
+              <a href="/login" role="button" class="btn btn-block btn-secondary">Back to User Login</a>
             </div>
-
-            <div class="d-grid gap-2 col-6 mx-auto mb-4">
-                <button class="btn btn-secondary" type="submit">Sent OTP</button>
-            </div>
-
-        </form>
-
-          <div class="d-grid gap-2 col-6 mx-auto mb-4">
-            <a href="/login" role="button" class="btn btn-block btn-secondary">Back to User Login</a>
-          </div>
 
           </div>
         </div>
@@ -41,6 +41,7 @@
     </div>
   </div>
 </section>
+
 
 <style>
 .bg{

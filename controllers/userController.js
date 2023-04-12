@@ -60,7 +60,7 @@ const sendVerifyMail = async (username, email, user_id) => {
       from: "codershafinsha@gmail.com",
       to: email,
       subject: "Email verification",
-      html: `<p>Hii ${username}, please click <a href="http://127.0.0.1:3000/verify?id=${user_id}">here</a> to verify your email.</p>`,
+      html: `<p>Hii ${username}, please click <a href="https://malefashion.shop/verify?id=${user_id}">here</a> to verify your email.</p>`,
     };
 
     transporter.sendMail(mailOption, (error, info) => {
@@ -292,7 +292,7 @@ const verifyMail = async (req, res, next) => {
       { $set: { is_verified: 1 } }
     );
 
-    res.render("email_verified");
+    res.render("emailVerified");
   } catch (error) {
     console.log(error.message);
     next(error.message);
@@ -358,7 +358,7 @@ const verifyotpMail = async (req, res, next) => {
                 secure: true,
                 auth: {
                   user: "codershafinsha@gmail.com",
-                  pass: "djwrpbkkywapftea",
+                  pass: process.env.EMAILPASS,
                 },
               });
 
@@ -366,10 +366,10 @@ const verifyotpMail = async (req, res, next) => {
               let details = {
                 from: "codershafinsha@gmail.com",
                 to: otpChechMail,
-                subject: "Classy Fashion Club",
+                subject: "MaleFashion",
                 text:
                   otp +
-                  " is your Classy Fashion Club verification code. Do not share OTP with anyone ",
+                  " is your Male Fashion  verification code. Do not share OTP with anyone ",
               };
               mailtransport.sendMail(details, (err) => {
                 if (err) {
@@ -402,11 +402,12 @@ const verifyotpMail = async (req, res, next) => {
 
 const otpVerify = async (req, res, next) => {
   try {
-    if (req.body.otp.trim().length == 0) {
+    console.log(req.query);
+    if (req.query.otp.toString().trim().length == 0) {
       res.redirect("/otp-page");
       msg = "Please Enter OTP";
     } else {
-      const OTP = req.body.otp;
+      const OTP = req.query.otp;
       if (otp == OTP) {
         const userData = await User.findOne({ email: otpChechMail });
         req.session.user_id = userData._id;
@@ -424,9 +425,21 @@ const otpVerify = async (req, res, next) => {
 };
 
 ////////////LOAD USER PROFILE PAGE/////////
-
 const userProfile = async (req, res, next) => {
   try {
+////Generating order id/////
+    const generateOrderId = () => {
+      const date = new Date();
+      const year = date.getFullYear().toString().substring(2, 4);
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+      const randomStr = Math.random().toString(36).substring(7).toUpperCase();
+      const num = Math.floor(Math.random() * 90 + 10);
+
+      const orderId = `MF-${year}${month}${day}-${randomStr}${num}`;
+      return orderId;
+    }
+    const orderId = generateOrderId();
     var page = 1;
     if (req.query.page) {
       page = req.query.page;
@@ -482,7 +495,9 @@ const userProfile = async (req, res, next) => {
           .findOne()
           .sort("-orderCount")
           .exec();
+       
         const order = new orderSchema({
+          orderId:orderId,
           userId: session,
           item: orderItems,
           address: address,
@@ -763,7 +778,8 @@ const address = async (req, res, next) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: new Object(session) });
 
-    res.render("address", { session, userData });
+    res.render("address", { session, userData,message });
+    message=null;
   } catch (error) {
     console.log(error);
     next(error.message);
@@ -789,28 +805,10 @@ const addNewAddress = async (req, res, next) => {
     const session = req.session.user_id;
     const data = req.body;
     const userData = await User.findOne({ _id: new Object(session) });
-
     userData.address.push(data);
     await userData.save();
 
-    res.redirect("userProfile");
-  } catch (error) {
-    console.log(error);
-    next(error.message);
-  }
-};
-
-///save address to db////  testing
-const SaveAddress = async (req, res, next) => {
-  try {
-    address = req.body;
-    console.log(address);
-    const session = req.session.user_id;
-    const userData = await User.findOne({ _id: new Object(session) });
-    const orders = await orderSchema.find({ userId: session });
-
-    orders.address.push(address);
-    await orders.save();
+    res.redirect("/address");
   } catch (error) {
     console.log(error);
     next(error.message);
@@ -1346,6 +1344,7 @@ const deleteWishlist = async (req, res, next) => {
     next(error.message);
   }
 };
+////Checkout/////
 
 const checkout = async (req, res) => {
   const index = req.query.index;
@@ -1371,6 +1370,29 @@ const checkout = async (req, res) => {
     msg = "Your cart is empty";
   }
 };
+
+//////Delete Address/////
+
+
+const deleteAddress = async (req, res, next) => {
+  try {
+    const userId = req.session.user_id;
+    const index = req.query.index;
+    const userData = await User.findOne({ _id: new Object(userId) });
+    console.log(userData.address[index]);
+    // Remove the address at the specified index position
+    userData.address.splice(index, 1);
+
+    // Save the updated userData to the database
+    await userData.save();
+    message='Address Deleted'
+    res.redirect("/address");
+  } catch (error) {
+    console.log(error.message);
+    next(error.message);
+  }
+};
+
 
 /////Coupon Checking/////
 
@@ -1559,12 +1581,9 @@ const orderPlaced = async (req, res, next) => {
       } else {
         mssg = "No Sufficient Balance";
         res.redirect("/paymentPage");
+        message=null;
       }
     }
-    // else {
-    //   message = "Select A Payment Option";
-    //   res.redirect("/paymentPage");
-    // }
   } catch (error) {
     console.log(error.message);
     next(error.message);
@@ -1608,8 +1627,21 @@ const razorpay = async (req, res, next) => {
 
   let paymentmethod = "online";
   const latestOrder = await orderSchema.findOne().sort("-orderCount").exec();
+  ///Generating order id/////
+  const generateOrderId = () => {
+    const date = new Date();
+    const year = date.getFullYear().toString().substring(2, 4);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const randomStr = Math.random().toString(36).substring(7).toUpperCase();
+    const num = Math.floor(Math.random() * 90 + 10);
 
+    const orderId = `MF-${year}${month}${day}-${randomStr}${num}`;
+    return orderId;
+  }
+  const orderId = generateOrderId();
   const order = new orderSchema({
+    orderId:orderId,
     userId: session,
     item: orderItems,
     address: address,
@@ -1622,6 +1654,7 @@ const razorpay = async (req, res, next) => {
   });
   await order.save();
   await cartSchema.deleteMany({ userId: session });
+  message='Order Placed'
   res.redirect("/userProfile");
 };
 
@@ -1982,6 +2015,18 @@ const sendMessage = async (req, res) => {
       console.log(error.message);
   }
 }
+/////returnPolicy////
+const returnPolicy = async (req, res, next) => {
+  try {
+    let session = req.session.user_id;
+    const userData = await User.findOne({ _id: new Object(session) });
+
+    res.render("returnPolicy", { session, userData });
+  } catch (error) {
+    console.log(error.message);
+    next(error.message);
+  }
+};
 
 module.exports = {
   userSignup,
@@ -1989,7 +2034,6 @@ module.exports = {
   verifyMail,
   loginUser,
   verifyLogin,
-  // loadHome,
   loginHome,
   logOut,
   logOutIn,
@@ -2010,6 +2054,7 @@ module.exports = {
   address,
   getNewAddress,
   addNewAddress,
+  deleteAddress,
   payment,
   orderPlaced,
   ordersView,
@@ -2030,5 +2075,6 @@ module.exports = {
   addtowallet,
   razorpay,
   razorpayConfirm,
-  sendMessage
+  sendMessage,
+  returnPolicy
 };

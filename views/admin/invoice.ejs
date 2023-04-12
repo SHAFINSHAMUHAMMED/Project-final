@@ -1,0 +1,90 @@
+<div  class="card hide"   id="sampleTable">
+    <div class="card-body">
+      <div class="container mb-5 mt-3">                 
+        <div class="container">
+            <div><img src="/img/logo.png" alt=""></div>
+           <div class="d-flex justify-content-center"><p class="text-muted" style="font-size: 25px;">Invoice</p></div>      
+          <div class="row">
+            <div class="col-xl-8">
+              <ul class="list-unstyled" style="text-decoration: none;">
+                <li class="text-muted">To: <span style="color:#5d9fc5 ;"><%=orders.address[0].username%></span></li>
+                <li class="text-muted"><%=orders.address[0].address%></li>
+                <li class="text-muted"><%=orders.address[0].city%></li>
+                <li class="text-muted"><%=orders.address[0].zip%></li>
+                <li class="text-muted"><i class="fas fa-phone"></i> <%=orders.address[0].phone%></li>
+              </ul>
+            </div>
+            <div class="col-xl-4">
+              
+              <ul class="list-unstyled">
+                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                    class="fw-bold">ID: </span><%=orders.orderId %></li>
+
+                    <% let date = new Date(orders.date); %>
+      <% let formattedDate = date.toLocaleString(); %>
+                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                    class="fw-bold">Creation Date: </span><%=formattedDate%></li>
+                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                    class="me-1 fw-bold">Status:</span><span class="badge bg-success text-black fw-bold">
+                    Delivered</span></li>
+                    <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                      class="me-1 fw-bold">Payment:</span><span class="badge bg-success text-black fw-bold">
+                      <%=orders.paymentType  %></span></li>
+              </ul>
+            </div>
+          </div>
+  
+          <div class="row my-2 mx-1 justify-content-center">
+            <table class="table table-striped table-borderless">
+              <thead style="background-color:#84B0CA ;" class="text-white">
+                
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Qty</th>
+                  <th scope="col">Unit Price</th>
+                  <th scope="col">Amount</th>
+                </tr>
+               
+              </thead>
+              <tbody>
+                <% for (let i=0; i < orders.item.length; i++) { %>
+                <tr>
+                  <th scope="row"><%=i+1%></th>
+                  <td><%=orders.item[i].product.title%></td>
+                  <td><%=orders.item[i].quantity%></td>
+                  <td><%=orders.item[i].product.price%></td>
+                  <td><%=orders.item[i].quantity*orders.item[i].product.price%></td>
+                </tr>
+                <%}%>
+              </tbody>
+  
+            </table>
+          </div>
+          <div class="row justify-content-end">
+            
+            <div class="col-xl-3">
+              <ul class="list-unstyled">
+                <%let tax=orders.totalPrice*(12/100)%>
+                <%let discount=orders.grandTotal-(40+tax)%>
+                <%discount=totalPrice-discount%>
+                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal </span> <%=orders.totalPrice%></li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(12%) </span> <%=tax%></li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Shipping </span> 40</li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount </span> <%=orders.discount%></li>
+              </ul>
+              <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
+                  style="font-size: 25px;"> ₹  <%=orders.grandTotal%></span></p>
+            </div>
+          </div>
+          <hr>
+          <div class="row justify-content-center">
+            
+             <span class="d-flex justify-content-center"> <p class="fw-bold">Thank you for your purchase</p></span>
+           
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,5 +1,17 @@
 <%- include('../layouts/header.ejs') %>
 <%- include('../layouts/commonhead.ejs',{session}) %>
+
+<style>
+  @media only screen and (max-width: 576px) {
+    .ordersummary{
+      font-size: 20px;
+      margin-top: 20px !important;
+    }
+    .ccaarrdd{
+      margin-top: 30px;
+    }
+  }
+</style>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -9,8 +21,8 @@
             <div class="card card-1">
                 <div class="card-header bg-white">
                     <div class="media flex-sm-row flex-column-reverse justify-content-between  ">
-                        <div class="col my-auto">
-                            <h4 class="mb-0">Order Summary<span class="change-color"> </span> </h4>
+                        <div class="col my-auto ">
+                            <h4 class="mb-0 ordersummary">Order Summary<span class="change-color"> </span> </h4>
                         </div>
                         <div class="col-auto text-center  my-auto pl-0 pt-sm-4 "> <img
                                 class="img-fluid my-auto align-items-center mb-0" src="/img/logo.png" width="115"
@@ -19,7 +31,7 @@
                         </div>
                     </div>
                 </div>
-                <div  class="card-body">
+                <div  class="card-body ccaarrdd">
                     <div class="row justify-content-between mb-3">
                         <%if(orders.is_delivered==true){%>
                         <div class="col-auto">
@@ -41,7 +53,7 @@
                                                         class="img-fluid  my-auto align-self-center  pl-0 p-0 m-0"
                                                         src="/proImage/<%=orders.item[i].product.image[0]%>" width="115"
                                                         height="115" /> 
-                                                        <h6 class="mb-0 text-center"><%=orders.item[i].product.title%></h6>
+                                                        <h6 class="mt-2 text-center"><%=orders.item[i].product.title%></h6>
                                                     </div>
                                                         
                                                 <div class="  ">
@@ -145,9 +157,9 @@
                                 </div>
                                 
                                 <div class="row tm-edit-product-row mt-3">
-                                    <div class="col-xl-6 col-lg-6 col-md-12">
-                                      <div class="p-3 text-dark" style="border: solid gray 1px;" >
-                                        <div ><h6 class="" style="font-weight: bold;">Delivery Address</h6><hr style="margin-top: 0;"> </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12" >
+                                      <div class="p-3 text-dark" style="border: solid gray 1px; height: 200px;" >
+                                        <div ><h6 class="" style="font-weight: bold;">Delivery Address</h6><hr style=" margin-top: 0;"> </div>
                                         <h6><%=orders.address[0].username%></h6>
                                         <div><%=orders.address[0].address%></div>
                                         <h6><%=orders.address[0].city%></h6>
@@ -157,22 +169,22 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-12">
                                       <div class="text-dark" >
-                                        <div class="p-3" style="border: solid gray 1px;">
+                                        <div class="p-3" style="border: solid gray 1px; height: 200px;">
                                           <div class=""><h6 style="font-weight: bold;">Order Details</h6><hr style="margin-top: 0;"> </div>
                                           <div>
-                                          <h6 class="d-flex justify-content-between"><span>Total Price:</span> <span> <%=orders.totalPrice%></span></h6>
+                                          <h6 class="d-flex justify-content-between mb-1"><span>Total Price:</span> <span> <%=orders.totalPrice%></span></h6>
                                         </div>
                                           <div>
-                                           <h6 class="d-flex justify-content-between"><span> Discount:</span> <span> <%=orders.discount%></span></h6>
+                                           <h6 class="d-flex justify-content-between mb-1"><span> Discount:</span> <span> <%=orders.discount%></span></h6>
                                           </div>
                                           <div>
-                                           <h6 class="d-flex justify-content-between"><span> Tax:</span><span> <%=orders.totalPrice*(12/100)%></span></h6>
+                                           <h6 class="d-flex justify-content-between mb-1"><span> Tax:</span><span> <%=orders.totalPrice*(12/100)%></span></h6>
                                           </div>
                                           <div>
-                                           <h6 class="d-flex justify-content-between"><span class=""> Shipping Fee:</span> <span> 40</span></h6>
+                                           <h6 class="d-flex justify-content-between mb-3"><span class=""> Shipping Fee:</span> <span> 40</span></h6>
                                           </div>
                                           
-                                          <h6 class="d-flex justify-content-between"><span class="me-3"> Grand Total:</span> <span> <%=orders.grandTotal%></span></h6>
+                                          <h6 class="d-flex justify-content-between"><span class="me-3 fw-bold"> Grand Total:</span> <span> ₹ <%=orders.grandTotal%></span></h6>
                                           </div>
                                       </div>
                     
@@ -213,7 +225,7 @@
                               
                               <ul class="list-unstyled">
                                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                                    class="fw-bold">ID:</span>#123-456</li>
+                                    class="fw-bold">ID: </span><%=orders.orderId %></li>
 
                                     <% let date = new Date(orders.date); %>
                       <% let formattedDate = date.toLocaleString(); %>
@@ -222,6 +234,9 @@
                                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
                                     class="me-1 fw-bold">Status:</span><span class="badge bg-success text-black fw-bold">
                                     Delivered</span></li>
+                                    <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                      class="me-1 fw-bold">Payment:</span><span class="badge bg-success text-black fw-bold">
+                                      <%=orders.paymentType  %></span></li>
                               </ul>
                             </div>
                           </div>
@@ -259,14 +274,14 @@
                               <ul class="list-unstyled">
                                 <%let tax=orders.totalPrice*(12/100)%>
                                 <%let discount=orders.grandTotal-(40+tax)%>
-                                <%discount=discount-totalPrice%>
-                                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span><%=orders.totalPrice%></li>
-                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(12%)</span><%=tax%></li>
-                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Shipping</span>40</li>
-                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount</span><%=discount%></li>
+                                <%discount=totalPrice-discount%>
+                                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal </span> <%=orders.totalPrice%></li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(12%) </span> <%=tax%></li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Shipping </span> 40</li>
+                                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount </span> <%=orders.discount%></li>
                               </ul>
                               <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
-                                  style="font-size: 25px;"><%=orders.grandTotal%></span></p>
+                                  style="font-size: 25px;"> ₹  <%=orders.grandTotal%></span></p>
                             </div>
                           </div>
                           <hr>

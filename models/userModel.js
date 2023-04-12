@@ -22,7 +22,8 @@ const userSchema = mongoose.Schema({
     },
     address:{
         type:Array,
-        required:true
+        required:true,
+        maxlength: 5
         },
    
     is_admin:{

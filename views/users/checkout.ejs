@@ -28,33 +28,31 @@
         <section class="checkout spad d-flex">
             <div class="container">
                 <div class="checkout__form">
-
+                    <form action="paymentPage" method="post" id="addressform">
                     <div class="row">
 
                         <div class="col-lg-8 col-md-6 ">
 
-
-
                             <div class="d-flex justify-content-end">
-                                <a href="/address">
-                                    <button type="submit">Select Address</button>
+                                <a class="btn btn-dark" href="/address">
+                                   Select Address
                                 </a>
 
                             </div>
                             <h6 class="checkout__title">Billing Details</h6>
-                            <form action="paymentPage" method="post">
+                           
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <% if (addressCount==undefined) { %>
                                                 <p>First Name<span>*</span></p>
-                                                <input type="text" name="username" value="<%= address[0].username %>" placeholder="" required
-                                                    minlength="2" />
+                                                <input type="text" name="username" value="<%= address[0].username %>" placeholder="" 
+                                                    />
                                                     <span class="error-message"></span>
                                                 <% } else { %>
                                                     <p>First Name<span>*</span></p>
                                                     <input type="text" name="username"
-                                                        value="<%=addressCount.username%>"  minlength="2" />
+                                                        value="<%=addressCount.username%>"   />
                                                     <span class="error-message"></span>
                                                     <% } %>
                                         </div>
@@ -72,7 +70,7 @@
                                         <p>Address<span>*</span></p>
                                         <input  name="address" id="inputOrgName" cols="30" rows="5"
                                             class="form-control " style="height: 100px;" value="<%= address[0].address %>"  placeholder=""
-                                            required>
+                                            >
                                         <% } else { %>
                                             <p>Address<span>*</span></p>
                                             <input name="address" id="inputOrgName" cols="30" rows="5"
@@ -83,7 +81,7 @@
                                 <div class="checkout__input">
                                     <% if (addressCount==undefined) { %>
                                         <p>Town/City<span>*</span></p>
-                                        <input name="city" type="text" value="<%= address[0].city %> " placeholder="" required>
+                                        <input name="city" type="text" value="<%= address[0].city %> " placeholder="" >
                                         <% } else { %>
                                             <p>Town/City<span>*</span></p>
                                             <input name="city" type="text" value="<%=addressCount.city%>" >
@@ -92,7 +90,7 @@
                                 <div class="checkout__input">
                                     <% if (addressCount==undefined) { %>
                                         <p>State<span>*</span></p>
-                                        <input name="state" type="text" value="<%= address[0].state %>" placeholder="" required>
+                                        <input name="state" type="text" value="<%= address[0].state %>" placeholder="" >
                                         <% } else { %>
                                             <p>State<span>*</span></p>
                                             <input name="state" type="text" value="<%=addressCount.state%>" >
@@ -103,7 +101,7 @@
                                         <div class="checkout__input">
                                             <% if (addressCount==undefined) { %>
                                                 <p>Postcode / ZIP<span>*</span></p>
-                                                <input name="zip" type="text" value="<%= address[0].zip %>" placeholder="" required>
+                                                <input name="zip" type="text" value="<%= address[0].zip %>" placeholder="" >
                                                 <% } else { %>
                                                     <p>Postcode / ZIP<span>*</span></p>
                                                     <input name="zip" type="text" value="<%=addressCount.zip%>" >
@@ -115,7 +113,7 @@
                                         <div class="checkout__input">
                                             <% if (addressCount==undefined) { %>
                                                 <p>Phone<span>*</span></p>
-                                                <input name="phone" type="tel" value="<%= address[0].phone %>" placeholder="" minlength=10 maxlength=10 required>
+                                                <input name="phone" type="tel" value="<%= address[0].phone %>" placeholder=""  maxlength=10 >
                                                 <% } else { %>
                                                     <p>Phone<span>*</span></p>
                                                     <input name="phone" type="tel" value="<%=addressCount.phone%> "minlength=10 >
@@ -158,6 +156,7 @@
                                                             
                                                             <button type="submit" class="site-btn">PROCEED TO
                                                                 PAYMENTS</button>
+                                                                <small class="text-danger error mt-3"></small>
 
                             </div>
                         </div>
@@ -169,18 +168,54 @@
 
        
 <script>
-    const usernameField = document.querySelector('input[name="username"]');
-const usernameValue = usernameField.value;
 
-// Check if the value has spaces
-if (usernameValue.includes(' ')) {
-  // Trim the value and update the input field
-  const trimmedValue = usernameValue.trim();
-  usernameField.value = trimmedValue;
-}
+const form = document.getElementById('addressform');
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
 
-// You can add the above code to an event listener, like 'blur' or 'submit',
-// to check and trim the username field when the user leaves the field or submits the form.
+  const usernameInput = document.getElementsByName('username')[0];
+  const addressInput = document.getElementsByName('address')[0];
+  const cityInput = document.getElementsByName('city')[0];
+  const stateInput = document.getElementsByName('state')[0];
+  const zipInput = document.getElementsByName('zip')[0];
+  const phoneInput = document.getElementsByName('phone')[0];
+  const errorElement = document.querySelector('.error');
+
+  let isValid = true;
+  if (usernameInput.value.trim().length === ''||usernameInput.value.trim().length < 2) {
+    isValid = false;
+    errorElement.textContent='Please enter a valid first name.'
+  }
+  
+  if (addressInput.value.trim() === ''||addressInput.value.trim().length<5||addressInput.value.trim().length>40) {
+    isValid = false;
+    errorElement.textContent = 'Please enter a valid address.';
+  }
+  
+  if (cityInput.value.trim() === ''||cityInput.value.trim().length<3||cityInput.value.trim().length>16) {
+    isValid = false;
+    errorElement.textContent = 'Please enter a valid city.';
+  }
+  
+  if (stateInput.value.trim() === ''||stateInput.value.trim().length<3||stateInput.value.trim().length>16) {
+    isValid = false;
+    errorElement.textContent = 'Please enter a valid state.';
+  } 
+  
+  if (zipInput.value.trim() === '' || !/^\d{5,6}$/.test(zipInput.value.trim())) {
+    isValid = false;
+    errorElement.textContent = 'Please enter a valid zip code.';
+  }
+  if (phoneInput.value.trim() !== '' && !/^\d{10}$/.test(phoneInput.value.trim())) {
+    isValid = false;
+    errorElement.textContent = 'Please enter a valid phone number.';
+  } 
+  
+  // If the form is valid, submit it
+  if (isValid) {
+    form.submit();
+  }
+});
 
 </script>
         <%- include('../layouts/commonfooter.ejs',{session}) %>

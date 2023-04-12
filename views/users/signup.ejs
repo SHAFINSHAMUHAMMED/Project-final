@@ -9,13 +9,13 @@
         <img src="/userImages/istockphoto-692909922-612x612.jpg"
           class="img-fluid" alt="Phone image">
       </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 ms-5">
-       <form class="mx-1 mx-md-4" action='/signup' method="post">
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+       <form class="mx-1 mx-md-4" action='/signup' method="post" id="signupform">
 
                   <div class="d-flex flex-row align-items-center mb-1">
                    
                     <div class="form-outline flex-fill mb-0">
-                      <input type="text" name="username" id="form3Example1c" class="form-control " placeholder="User Name" />
+                      <input type="text" name="username" id="username" class="form-control " placeholder="User Name" />
                      
                     </div>
                   </div>
@@ -23,7 +23,7 @@
                   <div class="d-flex flex-row align-items-center mb-1">
                     
                     <div class="form-outline flex-fill mb-0">
-                      <input type="email" name="email" id="form3Example3c" class="form-control mt-3" placeholder="Email Address" />
+                      <input type="email" name="email" id="email" class="form-control mt-3" placeholder="Email Address" />
                     
                     </div>
                   </div>
@@ -32,7 +32,7 @@
                   <div class="d-flex flex-row align-items-center mb-1">
                     
                     <div class="form-outline flex-fill mb-0">
-                      <input type="mobile" name="phone" id="form3Example3c" class="form-control mt-3" placeholder="Mobile Number" />
+                      <input type="mobile" name="phone" id="phone" class="form-control mt-3" placeholder="Mobile Number" />
                      
                     </div>
                   </div>
@@ -40,7 +40,7 @@
                   <div class="d-flex flex-row align-items-center mb-1">
                     
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" name="password" id="form3Example4c" class="form-control mt-3" placeholder="Password" />
+                      <input type="password" name="password" id="password" class="form-control mt-3" placeholder="Password" />
                      
                     </div>
                   </div>
@@ -48,7 +48,7 @@
                   <div class="d-flex flex-row align-items-center mb-1">
                     
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" name="Rpassword" id="form3Example4cd" class="form-control mt-3" placeholder="Repeat your password" />
+                      <input type="password" name="Rpassword" id="rpassword" class="form-control mt-3" placeholder="Repeat your password" />
                     
                     </div>
                   </div>
@@ -58,6 +58,7 @@
                         %>
                         <small class="text-success"><%= message %></small>
                         <small class="text-danger"><%= msg %></small>
+                        <small class="text-danger error"></small>
                         <%
                     } 
                     %>
@@ -86,64 +87,43 @@
 }</style>
 <%- include('../layouts/footer.ejs')%>
 <script>
-  const form = document.querySelector('form');
-  const usernameInput = document.querySelector('input[name="username"]');
-  const emailInput = document.querySelector('input[name="email"]');
-  const phoneInput = document.querySelector('input[name="phone"]');
-  const passwordInput = document.querySelector('input[name="password"]');
-  const rpasswordInput = document.querySelector('input[name="Rpassword"]');
-  const errorDiv = document.querySelector('#error');
+  const form = document.getElementById("signupform");
+  
+  const usernameInput = document.getElementById("username");
+  const emailInput = document.getElementById("email");
+  const mobileInput = document.getElementById("phone");
+  const passwordInput = document.getElementById("password");
+  const rpasswordInput = document.getElementById("rpassword");
+  const errorElement = document.querySelector('.error');
 
-  form.addEventListener('submit', (event) => {
-    let isValid = true;
-    errorDiv.innerHTML = '';
-
-    if (!usernameInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Please enter a username.';
-      errorDiv.appendChild(error);
-    }
-
-    if (!emailInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Please enter an email address.';
-      errorDiv.appendChild(error);
-    }
-
-    if (!phoneInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Please enter a phone number.';
-      errorDiv.appendChild(error);
-    }
-
-    if (!passwordInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Please enter a password.';
-      errorDiv.appendChild(error);
-    }
-
-    if (!rpasswordInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Please repeat your password.';
-      errorDiv.appendChild(error);
-    }
-
-    if (passwordInput.value !== rpasswordInput.value) {
-      isValid = false;
-      const error = document.createElement('div');
-      error.innerText = 'Passwords do not match.';
-      errorDiv.appendChild(error);
-    }
-
-    if (!isValid) {
-      event.preventDefault();
-    }
-  });
+  const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regex_mobile = /^\d{10}$/;
+  const regex_password = /^(?=.*?[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]){8,16}/gm;
+  
+  form.addEventListener('submit', (e) => {
+  let messages = '';
+  if (usernameInput.value.trim().length==0||usernameInput.value.trim().length<3||usernameInput.value.trim().length>16) {
+   messages="must be between 3 and 16 characters long."
+    
+  }
+  if (!regex_email.test(emailInput.value)) {
+     messages= "Email address must be valid."
+  }
+  
+  if (!regex_mobile.test(mobileInput.value)) {
+    messages=  "Mobile number must be a 10-digit number."
+  }
+  if (!regex_password.test(passwordInput.value)) {
+    messages=  "Password must have at least one uppercase letter, one lowercase letter, one number, one special character, and be between 8 and 16 characters long."
+  }
+  
+  if (passwordInput.value !== rpasswordInput.value) {
+    messages=  "Passwords do not match."
+  }
+  
+  if (messages.length>0) {
+    e.preventDefault()
+    errorElement.innerText = messages
+  }
+})
 </script>
-
-<div id="error"></div>

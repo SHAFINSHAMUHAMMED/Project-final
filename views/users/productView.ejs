@@ -1,5 +1,12 @@
 <%- include('../layouts/header.ejs') %>
 <%- include('../layouts/commonhead.ejs',{session}) %>
+<style>
+    @media only screen and (max-width: 767px) {
+    .imgg{
+        margin-right: 0 !important;
+    }
+    }
+</style>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -7,7 +14,7 @@
 
         <section class="shop-details mb-5">
             <div class="product__details__pic">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="product__details__breadcrumb">
@@ -17,9 +24,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row justify-content-center ">
                         <div class="col-lg-2 col-md-2   imgbar">
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs justify-content-center" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
                                         <div class="product__thumb__pic set-bg imgbar"
@@ -57,8 +64,8 @@
                                     <div class="mt-5">
 
 
-                                        <a href="/proImage/<%=product.image[0]%>" class="MagicZoom"
-                                            data-options="zoomDistance: 1000"><img
+                                        <a href="/proImage/<%=product.image[0]%>" class="MagicZoom imgg"
+                                            data-options="zoomDistance: 1000" style="margin-right: 35%;"><img
                                                 src="/proImage/<%=product.image[0]%>"></a>
 
                                         <img src="" alt="">
@@ -206,7 +213,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="tabs-6" role="tabpanel">
+                                    <!-- <div class="tab-pane" id="tabs-6" role="tabpanel">
                                         <div class="product__details__tab__content">
                                             <div class="product__details__tab__content__item">
                                                 <h5>Products Reviews</h5>
@@ -230,7 +237,7 @@
                                             </div>
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
