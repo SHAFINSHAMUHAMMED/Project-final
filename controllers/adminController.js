@@ -4,12 +4,12 @@ const productSchema = require("../models/productModel");
 const orderSchema = require("../models/orderModel");
 const couponSchema = require("../models/couponModel");
 const salesSchema = require("../models/salesReport");
-const bannerSchema = require('../models/bannerModel')
-const path = require('path')
-const fs = require('fs');
+const bannerSchema = require("../models/bannerModel");
+const path = require("path");
+const fs = require("fs");
 const sharp = require("sharp");
 const swal = require("sweetalert2");
-const moment = require('moment');
+const moment = require("moment");
 const bcrypt = require("bcrypt");
 const { CURSOR_FLAGS } = require("mongodb");
 const nodemailer = require("nodemailer");
@@ -21,10 +21,8 @@ let messag;
 ////////LOGIN PAGE LODING////////////
 
 const loginLoad = async (req, res) => {
-  
   res.render("login", { msg });
   msg = null;
- 
 };
 
 /////////////ADMIN LOGIN////////////////////
@@ -67,7 +65,6 @@ const adminLogin = async (req, res) => {
 
 const loadAdminHome = async (req, res) => {
   try {
-   
     const users = await userSchema.find();
     const usersLength = users.length;
     const today = new Date();
@@ -116,15 +113,18 @@ const loadAdminHome = async (req, res) => {
         },
       },
     ]);
-   ///lineChart//// 
+    ///lineChart////
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Number of days in the month
-    
-    const monthlyStart = new Date(currentYear, currentMonth, 1).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
+    const monthlyStart = new Date(currentYear, currentMonth, 1).toLocaleString(
+      "en-US",
+      { timeZone: "Asia/Kolkata" }
+    );
     const monthlyEnd = new Date(currentYear, currentMonth, daysInMonth);
-    
+
     const monthlySalesData = await salesSchema.find({
       date: {
         $gte: monthlyStart,
@@ -132,12 +132,11 @@ const loadAdminHome = async (req, res) => {
       },
     });
     const dailySalesDetails = [];
-    
-    for (let i = 2; i <= daysInMonth+1; i++) {
+
+    for (let i = 2; i <= daysInMonth + 1; i++) {
       const date = new Date(currentYear, currentMonth, i);
       const salesOfDay = monthlySalesData.filter((order) => {
         return new Date(order.date).toDateString() === date.toDateString();
-      
       });
       const totalSalesOfDay = salesOfDay.reduce((total, order) => {
         return total + order.totalSales;
@@ -146,42 +145,59 @@ const loadAdminHome = async (req, res) => {
       salesOfDay.forEach((order) => {
         productCountOfDay += order.totalItemsSold;
       });
-      
-      dailySalesDetails.push({ date: date, totalSales: totalSalesOfDay, totalItemsSold: productCountOfDay });
+
+      dailySalesDetails.push({
+        date: date,
+        totalSales: totalSalesOfDay,
+        totalItemsSold: productCountOfDay,
+      });
     }
 
-
-   const order= await orderSchema.aggregate([
+    const order = await orderSchema.aggregate([
       {
         $group: {
           _id: "$paymentType",
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
         $group: {
           _id: null,
           codCount: {
             $sum: {
-              $cond: { if: { $eq: [ "$_id", "cod" ] }, then: "$count", else: 0 }
-            }
+              $cond: { if: { $eq: ["$_id", "cod"] }, then: "$count", else: 0 },
+            },
           },
           onlineCount: {
             $sum: {
-              $cond: { if: { $eq: [ "$_id", "online" ] }, then: "$count", else: 0 }
-            }
-          }
-        }
+              $cond: {
+                if: { $eq: ["$_id", "online"] },
+                then: "$count",
+                else: 0,
+              },
+            },
+          },
+          walletCount: {
+            $sum: {
+              $cond: {
+                if: { $eq: ["$_id", "wallet"] },
+                then: "$count",
+                else: 0,
+              },
+            },
+          },
+        },
       },
       {
         $project: {
           _id: 0,
           codCount: 1,
-          onlineCount: 1
-        }
-      }
-    ])
- 
+          onlineCount: 1,
+          walletCount: 1,
+        },
+      },
+    ]);
+
     res.render("home", {
       dailySalesReport,
       weeklySalesReport,
@@ -189,7 +205,7 @@ const loadAdminHome = async (req, res) => {
       message,
       usersLength,
       dailySalesDetails,
-      order
+      order,
     }),
       (message = null);
   } catch (error) {
@@ -207,23 +223,23 @@ const orders = async (req, res) => {
     }
     const limit = 10;
     const orders = await orderSchema
-    .find()
-    .populate("userId")
-    .populate("item.product")
-    .sort({ orderCount: -1 })
-    .limit(limit)
-    .skip((page - 1) * limit)
-    .exec();
-  const count = await orderSchema.find().countDocuments();
-    res.render("orders",{
+      .find()
+      .populate("userId")
+      .populate("item.product")
+      .sort({ orderCount: -1 })
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .exec();
+    const count = await orderSchema.find().countDocuments();
+    res.render("orders", {
       orders,
       totalPages: Math.ceil(count / limit),
       page,
       message,
-      messag
+      messag,
     });
-    (message = null);
-    messag=null
+    message = null;
+    messag = null;
   } catch (error) {
     console.log(error);
   }
@@ -233,27 +249,29 @@ const orders = async (req, res) => {
 
 const loadSalesPage = async (req, res) => {
   try {
-    var page=1;
-    if(req.query.page){
-      page=req.query.page
+    var page = 1;
+    if (req.query.page) {
+      page = req.query.page;
     }
-    const limit=10;
-    let filter = '';
+    const limit = 10;
+    let filter = "";
     if (req.query.filter) {
       filter = req.query.filter;
     }
 
     let sales = [];
     let count = 0;
-    if (filter === 'all') {
-      sales = await salesSchema.find({}).populate('userId')
+    if (filter === "all") {
+      sales = await salesSchema
+        .find({})
+        .populate("userId")
         .limit(limit)
-        .skip((page-1)*limit)
-        .exec()
+        .skip((page - 1) * limit)
+        .exec();
       count = await salesSchema.countDocuments({});
-    } else if (filter === 'weekly') {
-      const startOfWeek = moment().startOf('week').toDate();
-      const endOfWeek = moment().endOf('week').toDate();
+    } else if (filter === "weekly") {
+      const startOfWeek = moment().startOf("week").toDate();
+      const endOfWeek = moment().endOf("week").toDate();
       sales = await salesSchema
         .find({
           date: {
@@ -261,20 +279,20 @@ const loadSalesPage = async (req, res) => {
             $lte: endOfWeek,
           },
         })
-        .populate('userId')
+        .populate("userId")
         .limit(limit)
-        .skip((page-1)*limit)
-        .exec()
+        .skip((page - 1) * limit)
+        .exec();
       count = await salesSchema.countDocuments({
         date: {
           $gte: startOfWeek,
           $lte: endOfWeek,
         },
       });
-    } else if (filter === 'yearly') {
-      const startOfYear = moment().startOf('year').toDate();
-      const endOfYear = moment().endOf('year').toDate();
-    
+    } else if (filter === "yearly") {
+      const startOfYear = moment().startOf("year").toDate();
+      const endOfYear = moment().endOf("year").toDate();
+
       sales = await salesSchema
         .find({
           date: {
@@ -282,10 +300,10 @@ const loadSalesPage = async (req, res) => {
             $lte: endOfYear,
           },
         })
-        .populate('userId')
+        .populate("userId")
         .limit(limit)
-        .skip((page-1)*limit)
-        .exec()
+        .skip((page - 1) * limit)
+        .exec();
       count = await salesSchema.countDocuments({
         date: {
           $gte: startOfYear,
@@ -293,14 +311,20 @@ const loadSalesPage = async (req, res) => {
         },
       });
     } else {
-      sales = await salesSchema.find().populate('userId')
+      sales = await salesSchema
+        .find()
+        .populate("userId")
         .limit(limit)
-        .skip((page-1)*limit)
-        .exec()
+        .skip((page - 1) * limit)
+        .exec();
       count = await salesSchema.countDocuments({});
     }
-    
-    res.render('salesReport', { sales,totalPages:Math.ceil(count/limit), count });
+
+    res.render("salesReport", {
+      sales,
+      totalPages: Math.ceil(count / limit),
+      count,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -366,7 +390,7 @@ const loadUserData = async (req, res) => {
       users: userData,
       totalPages: Math.ceil(count / limit),
       currentPage: page,
-      page
+      page,
     });
   } catch (error) {
     console.log(error);
@@ -405,78 +429,76 @@ const unblockUser = async (req, res) => {
 
 ////////////LOAD BANNER SHOWING PAGE/////////
 
-const bannersPage = async(req,res)=>{
+const bannersPage = async (req, res) => {
   try {
-      const banners = await bannerSchema.find()
-      console.log(banners);
-      res.render('banners',{message,banners,msg})
-      msg = null,
-      message = null
+    const banners = await bannerSchema.find();
+    res.render("banners", { message, banners, msg });
+    (msg = null), (message = null);
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
+};
 
 ////////LOAD ADD BANNER PAGE////////
 
-const loadAddBanner = async(req,res)=>{
+const loadAddBanner = async (req, res) => {
   try {
-      res.render('addBanner')
+    res.render("addBanner");
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
-
+};
 
 //////////ADD BANNER//////////
 
-const addBanner = async(req,res)=>{
+const addBanner = async (req, res) => {
   try {
-      const ban = req.body
-      let image = req.files.map(file=>file)
-      for(let i=0;i<image.length;i++){
-        let path = image[i].path
-        sharp(path).rotate().resize(1920, 800).toFile('public/img/banner/' + image[i].filename)
-      }
-      
-      const old = await bannerSchema.find()
-      if(old==null||old.length==0){
-          const banner = new bannerSchema({
-              heading1:ban.heading1,
-              heading2:ban.heading2,
-              heading3:ban.heading3,
-              description1:ban.description1,
-              description2:ban.description2,
-              description3:ban.description3,
-              image:req.files.map(file=>file.filename)
-          })
-  
-         await banner.save()
-          res.redirect('/admin/banner')
-          message = 'Banner added successfully'
-      }else{
-          res.redirect('/admin/banner')
-          msg='There is already have a banner'
-      }
-  } catch (error) {
-      console.log(error.message);
-  }
-}
+    const ban = req.body;
+    let image = req.files.map((file) => file);
+    for (let i = 0; i < image.length; i++) {
+      let path = image[i].path;
+      sharp(path)
+        .rotate()
+        .resize(1920, 800)
+        .toFile("public/img/banner/" + image[i].filename);
+    }
 
+    const old = await bannerSchema.find();
+    if (old == null || old.length == 0) {
+      const banner = new bannerSchema({
+        heading1: ban.heading1,
+        heading2: ban.heading2,
+        heading3: ban.heading3,
+        description1: ban.description1,
+        description2: ban.description2,
+        description3: ban.description3,
+        image: req.files.map((file) => file.filename),
+      });
+
+      await banner.save();
+      res.redirect("/admin/banner");
+      message = "Banner added successfully";
+    } else {
+      res.redirect("/admin/banner");
+      msg = "There is already have a banner";
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 ////////////DELETE BANNER/////////////////
 
-const deleteBanner = async(req,res)=>{
+const deleteBanner = async (req, res) => {
   try {
-      const id = req.query.id
-      await bannerSchema.deleteOne({_id:id})
-      res.redirect('/admin/banner')
-      message = 'banner delted successfully'
+    const id = req.query.id;
+    await bannerSchema.deleteOne({ _id: id });
+    res.redirect("/admin/banner");
+    message = "banner delted successfully";
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
-
+};
 
 ///////////////SHOW PRODUCTS///////////////////
 
@@ -529,7 +551,6 @@ const loadProducts = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const id = req.body.delete;
-    console.log(id);
     await productSchema.deleteOne({ _id: new Object(id) });
     message = "Product Deleted";
     res.redirect("/admin/products");
@@ -616,7 +637,7 @@ const addProduct = async (req, res) => {
       pro.stock.toString().trim().length == 0 ||
       pro.stock <= 0 ||
       !req.files ||
-      req.files.length <4 ||
+      req.files.length < 4 ||
       req.files.some((file) => file.mimetype.split("/")[0] !== "image") ||
       pro.size.length == 0 ||
       pro.color.length == 0
@@ -628,27 +649,32 @@ const addProduct = async (req, res) => {
       for (i = 0; i < 4; i++) {
         let path = image[i].path;
         const processImage = new Promise((resolve, reject) => {
-          sharp(path).rotate().resize(270, 360).toFile('public/proImage/' + image[i].filename,(err) => {
+          sharp(path)
+            .rotate()
+            .resize(270, 360)
+            .toFile("public/proImage/" + image[i].filename, (err) => {
               sharp.cache(false);
               if (err) {
-                  console.log(err);
-                  reject(err);
+                console.log(err);
+                reject(err);
               } else {
-                  console.log(`Processed file: ${path}`);
-                  resolve();
+                console.log(`Processed file: ${path}`);
+                resolve();
               }
-          })
-      });
-      processImage.then(() => {
-          fs.unlink(path, (err) => {
+            });
+        });
+        processImage
+          .then(() => {
+            fs.unlink(path, (err) => {
               if (err) {
-                  console.log(err);
+                console.log(err);
               } else {
-                  console.log(`Deleted file: ${path}`);
+                console.log(`Deleted file: ${path}`);
               }
-          });
-      }).catch((err) => {
-          console.log(err);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
 
@@ -681,74 +707,78 @@ const editProduct = async (req, res) => {
     const id = req.query.id;
     const product = await productSchema.findById(id);
     const selectedImagePositions = prod.updateImage; // User-selected image positions
-
-    if (prod.title.trim().length == 0 || 
-        prod.price.toString().trim().length == 0 || 
-        prod.stock.toString().trim().length == 0 || 
-        prod.stock <= 0 ||
-        prod.category.length == 0 || 
-        prod.brand.trim().length == 0 ||
-        prod.description.trim().length == 0 || 
-        prod.size == undefined ||
-        prod.color == undefined) {
-      msg = 'Fields Should Not Be Empty';
-      res.redirect('/admin/products');
+    if (
+      prod.title.trim().length == 0 ||
+      prod.price.toString().trim().length == 0 ||
+      prod.stock.toString().trim().length == 0 ||
+      prod.stock <= 0 ||
+      prod.category.length == 0 ||
+      prod.brand.trim().length == 0 ||
+      prod.description.trim().length == 0 ||
+      prod.size == undefined ||
+      prod.color == undefined
+    ) {
+      msg = "Fields Should Not Be Empty";
+      res.redirect("/admin/products");
     } else {
       let imagePaths = product.image;
-      let images = req.files.map(file => file);
+      let images = req.files.map((file) => file);
       // Update only the selected images
-      if (selectedImagePositions!=undefined) {
-        imagePaths = await Promise.all(imagePaths.map(async (path, i) => { 
-          if (selectedImagePositions.includes(i.toString())) {
-            const image = images[selectedImagePositions.indexOf(i.toString())];
-        
-            if (image && image.mimetype.split("/")[0] !== "image") {
-              msg = 'Invalid file type';
-              res.redirect('/admin/products');
-              return path;
-            } else if (image) {
-              const newPath = 'public/proImage/' + image.filename;
-              await sharp(image.path).rotate().resize(270, 360).toFile(newPath);
-              try {
-                await fs.promises.unlink(image.path);
-                console.log(`Deleted file: ${image.path}`);
-              } catch (error) {
-              }
-        
-              // Only update the image path if the user has selected a file
-              if (image.size > 0) {
-                return image.filename;
+      if (selectedImagePositions != undefined) {
+        imagePaths = await Promise.all(
+          imagePaths.map(async (path, i) => {
+            if (selectedImagePositions.includes(i.toString())) {
+              const image =
+                images[selectedImagePositions.indexOf(i.toString())];
+
+              if (image && image.mimetype.split("/")[0] !== "image") {
+                msg = "Invalid file type";
+                res.redirect("/admin/products");
+                return path;
+              } else if (image) {
+                const newPath = "public/proImage/" + image.filename;
+                await sharp(image.path)
+                  .rotate()
+                  .resize(270, 360)
+                  .toFile(newPath);
+                try {
+                  await fs.promises.unlink(image.path);
+                  console.log(`Deleted file: ${image.path}`);
+                } catch (error) {}
+
+                // Only update the image path if the user has selected a file
+                if (image.size > 0) {
+                  return image.filename;
+                }
               }
             }
-          }
-          return path;
-        }));
+            return path;
+          })
+        );
       }
 
-      await productSchema.updateOne({ _id: id }, {
-        $set: {
-          title: prod.title,
-          brand: prod.brand,
-          description: prod.description,
-          category: prod.category,
-          stock: prod.stock,
-          price: prod.price,
-          image: imagePaths
+      await productSchema.updateOne(
+        { _id: id },
+        {
+          $set: {
+            title: prod.title,
+            brand: prod.brand,
+            description: prod.description,
+            category: prod.category,
+            stock: prod.stock,
+            price: prod.price,
+            image: imagePaths,
+          },
         }
-      });
-      
-      message = 'Product Updated Successfully';
-      res.redirect('/admin/products');
+      );
+
+      message = "Product Updated Successfully";
+      res.redirect("/admin/products");
     }
   } catch (error) {
     console.log(error);
   }
 };
-
-
-
-
-
 
 ////////////ADD CATEGORY///////////////
 
@@ -773,15 +803,13 @@ const addCategory = async (req, res) => {
   }
 };
 
-
 ////////////EDIT CATEGORY///////////
 
 const editCategory = async (req, res) => {
   try {
     let oldCat = req.body.category;
     let newCat = req.body.editedCategory;
-    newCat=newCat.toString()
-    console.log(newCat,'newww');
+    newCat = newCat.toString();
     const checkNew = await categorySchema.findOne({ category: newCat });
     if (newCat.trim().length === 0) {
       res.redirect("/admin/category");
@@ -791,8 +819,14 @@ const editCategory = async (req, res) => {
         res.redirect("/admin/category");
         msg = "Already Exist";
       } else {
-        await categorySchema.findOneAndUpdate({_id:oldCat},{$set:{ category: newCat }})
-        await productSchema.updateMany({categoryid:oldCat},{$set:{category:newCat}})
+        await categorySchema.findOneAndUpdate(
+          { _id: oldCat },
+          { $set: { category: newCat } }
+        );
+        await productSchema.updateMany(
+          { categoryid: oldCat },
+          { $set: { category: newCat } }
+        );
         message = "Category Updated Successfully";
         res.redirect("/admin/Category");
       }
@@ -848,7 +882,7 @@ const cancelOrder = async (req, res) => {
       { $set: { admin_cancelled: true } }
     );
     const order = await orderSchema.findOne({ _id: orderId });
-    if (order.paymentType === "online") {
+    if (order.paymentType === "online" || order.paymentType === "wallet") {
       let grandTotal = order.grandTotal;
       const userId = order.userId;
       const user = await userSchema.findOne({ _id: userId });
@@ -861,7 +895,7 @@ const cancelOrder = async (req, res) => {
     }
     res.redirect("/admin/orders");
     if (order.paymentType === "online") {
-      messag = "Orderd canelled And Refunded";
+      messag = "Orderd canelled And Refunded" || order.paymentType === "wallet";
     } else {
       messag = "Orderd canelled";
     }
@@ -899,7 +933,7 @@ const acceptOrder = async (req, res) => {
 
 ///Confirm Delivery/////
 
-const PDFDocument = require('pdfkit');
+const PDFDocument = require("pdfkit");
 const { count } = require("console");
 
 const acceptDelivery = async (req, res) => {
@@ -920,20 +954,19 @@ const acceptDelivery = async (req, res) => {
       // Generate the invoice PDF
       const doc = new PDFDocument();
       ///content
-      doc.text('Invoice', { align: 'center', fontSize: 20 });
-      doc.text('Order ID: ' + order.orderId);
-      doc.text('Delivered Date: ' + new Date().toLocaleDateString());
-      doc.text('Order Amount: ' + order.grandTotal);
-      doc.text('Name: ' + order.address[0].username);
-      doc.text('Order Address: ' + order.address[0].address);
-      doc.text('Order Phone: ' + order.address[0].phone);
-      doc.text('Order Phone: ' + order.paymentType);
-
+      doc.text("Invoice", { align: "center", fontSize: 20 });
+      doc.text("Order ID: " + order.orderId);
+      doc.text("Delivered Date: " + new Date().toLocaleDateString());
+      doc.text("Order Amount: " + order.grandTotal);
+      doc.text("Name: " + order.address[0].username);
+      doc.text("Order Address: " + order.address[0].address);
+      doc.text("Order Phone: " + order.address[0].phone);
+      doc.text("Order Phone: " + order.paymentType);
 
       const invoiceBuffer = await new Promise((resolve, reject) => {
         const buffers = [];
-        doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', () => {
+        doc.on("data", buffers.push.bind(buffers));
+        doc.on("end", () => {
           resolve(Buffer.concat(buffers));
         });
         doc.end();
@@ -944,25 +977,25 @@ const acceptDelivery = async (req, res) => {
       const user = await userSchema.findOne({ _id: userId });
       const email = user.email;
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
+        host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: {
-          user: 'codershafinsha@gmail.com',
+          user: "codershafinsha@gmail.com",
           pass: process.env.EMAILPASS,
         },
       });
 
       const mailOption = {
-        from: 'codershafinsha@gmail.com',
+        from: "codershafinsha@gmail.com",
         to: email,
-        subject: 'Order Status',
+        subject: "Order Status",
         html: `<h6>Hii ${user.username},</h6>  <p> Your Order is Delivered Succesfully.</p>`,
         attachments: [
           {
-            filename: 'invoice.pdf',
+            filename: "invoice.pdf",
             content: invoiceBuffer,
-            contentType: 'application/pdf',
+            contentType: "application/pdf",
           },
         ],
       };
@@ -970,9 +1003,9 @@ const acceptDelivery = async (req, res) => {
       transporter.sendMail(mailOption, (error, info) => {
         if (error) {
           console.log(error.message);
-          console.log('Email could not be sent');
+          console.log("Email could not be sent");
         } else {
-          console.log('Email has been sent:', info.response);
+          console.log("Email has been sent:", info.response);
         }
       });
 
@@ -996,19 +1029,19 @@ const acceptDelivery = async (req, res) => {
           totalItemsSold: product.length,
           userId: updatedOrder.userId,
           location: updatedOrder.address[0].city,
-          orderId: updatedOrder.orderId
+          orderId: updatedOrder.orderId,
         });
         await newSalesReport.save();
       }
-      res.redirect('/admin/home');
-      message = 'Order status changed successfully';
+      res.redirect("/admin/home");
+      message = "Order status changed successfully";
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-      ///Invoice page////
+///Invoice page////
 const invoice = async (req, res) => {
   try {
     res.render("/admin/invoice");
@@ -1056,9 +1089,7 @@ const acceptReturn = async (req, res) => {
     await salesSchema.deleteOne({
       orders: orderId,
     });
-
     let grandTotal = order.grandTotal;
-    console.log(typeof grandTotal);
     const userId = order.userId;
     const userr = new userSchema({});
     const user = await userSchema.findOne({ _id: userId });
@@ -1068,7 +1099,6 @@ const acceptReturn = async (req, res) => {
       { _id: userId },
       { $set: { wallet: wallet + grandTotal } }
     );
-
     res.redirect("/admin/orders");
     message = "Return accepted";
   } catch (error) {
@@ -1102,7 +1132,7 @@ const CouponGenerate = async (req, res) => {
     } else {
       res.render("coupon", { message, msg });
       message = null;
-      msg=null
+      msg = null;
     }
   } catch (error) {
     console.log(error);
@@ -1149,7 +1179,6 @@ const addCoupon = async (req, res) => {
 const deleteCoupon = async (req, res) => {
   try {
     let couponId = req.query.id;
-    console.log(couponId);
     await couponSchema.deleteOne({ _id: couponId });
     message = "Coupon Deleted";
     res.redirect("/admin/Coupons");
@@ -1193,5 +1222,4 @@ module.exports = {
   loadAddBanner,
   addBanner,
   deleteBanner,
-
 };

@@ -192,7 +192,6 @@ const verifyLogin = async (req, res, next) => {
           if (userData.is_verified == 1) {
             if (userData.is_blocked == 0) {
               req.session.user_id = userData._id;
-              console.log(req.session.user_id);
               res.redirect("/loginHome");
             } else {
               res.redirect("/login");
@@ -222,26 +221,25 @@ const verifyLogin = async (req, res, next) => {
 const loginHome = async (req, res, next) => {
   let session;
   try {
-    if(req.session.user_id){
-      console.log('dfghj');
-     session = req.session.user_id;
-    const banner = await bannerSchema.findOne();
-    const userData = await User.findOne({ _id: new Object(session) });
-    //if user havn't wallet createing////
-    if (userData.wallet === undefined) {
-      await User.updateOne({ _id: session }, { $set: { wallet: 0 } });
-    }
-    if(userData.address.length==0){
-      await User.updateOne({_id: session}, {$set: {address: [0]}})
-    }
-    const products = await productSchema.find({
-      unlisted: 0,
-      stock: { $gt: 0 },
-    });
+    if (req.session.user_id) {
+      session = req.session.user_id;
+      const banner = await bannerSchema.findOne();
+      const userData = await User.findOne({ _id: new Object(session) });
+      //if user havn't wallet createing////
+      if (userData.wallet === undefined) {
+        await User.updateOne({ _id: session }, { $set: { wallet: 0 } });
+      }
+      if (userData.address.length == 0) {
+        await User.updateOne({ _id: session }, { $set: { address: [0] } });
+      }
+      const products = await productSchema.find({
+        unlisted: 0,
+        stock: { $gt: 0 },
+      });
 
-    if ((products.stock = 0)) {
-      message = "Out Of Stock";
-    }
+      if ((products.stock = 0)) {
+        message = "Out Of Stock";
+      }
       res.render("home", {
         product: products,
         session,
@@ -249,20 +247,17 @@ const loginHome = async (req, res, next) => {
         banner,
         message,
       });
-    
-  }else{
-    const banner = await bannerSchema.findOne();
-        const products = await productSchema.find({
-          unlisted: 0,
-          stock: { $gt: 0 },
-        });
-        if ((products.stock = 0)) {
-           message = "Out Of Stock";
-    
-        } 
-        res.render("home", { product: products,session, banner, message });
-
-  }
+    } else {
+      const banner = await bannerSchema.findOne();
+      const products = await productSchema.find({
+        unlisted: 0,
+        stock: { $gt: 0 },
+      });
+      if ((products.stock = 0)) {
+        message = "Out Of Stock";
+      }
+      res.render("home", { product: products, session, banner, message });
+    }
   } catch (error) {
     console.log(error.message);
     next(error.message);
@@ -344,9 +339,7 @@ const verifyotpMail = async (req, res, next) => {
       msg = "Please fill the form";
     } else {
       otpChechMail = req.body.email;
-      const userData = await User.findOne({ email: otpChechMail });
-      console.log(userData);
-
+      const userData = await User.findOne({ email: otpChechMail });   
       if (userData) {
         if (otpChechMail) {
           if (userData.is_verified == 1) {
@@ -402,7 +395,6 @@ const verifyotpMail = async (req, res, next) => {
 
 const otpVerify = async (req, res, next) => {
   try {
-    console.log(req.query);
     if (req.query.otp.toString().trim().length == 0) {
       res.redirect("/otp-page");
       msg = "Please Enter OTP";
@@ -411,7 +403,6 @@ const otpVerify = async (req, res, next) => {
       if (otp == OTP) {
         const userData = await User.findOne({ email: otpChechMail });
         req.session.user_id = userData._id;
-        console.log(req.session.user_id);
         res.redirect("/");
       } else {
         res.redirect("/otp-page");
@@ -427,7 +418,7 @@ const otpVerify = async (req, res, next) => {
 ////////////LOAD USER PROFILE PAGE/////////
 const userProfile = async (req, res, next) => {
   try {
-////Generating order id/////
+    ////Generating order id/////
     const generateOrderId = () => {
       const date = new Date();
       const year = date.getFullYear().toString().substring(2, 4);
@@ -438,7 +429,7 @@ const userProfile = async (req, res, next) => {
 
       const orderId = `MF-${year}${month}${day}-${randomStr}${num}`;
       return orderId;
-    }
+    };
     const orderId = generateOrderId();
     var page = 1;
     if (req.query.page) {
@@ -451,7 +442,6 @@ const userProfile = async (req, res, next) => {
       const messageJSON = req.query.message;
       let messagge = JSON.parse(messageJSON);
       message = messagge.message;
-      console.log(messagge);
     }
     const limit = 10;
     const session = req.session.user_id;
@@ -495,9 +485,9 @@ const userProfile = async (req, res, next) => {
           .findOne()
           .sort("-orderCount")
           .exec();
-       
+
         const order = new orderSchema({
-          orderId:orderId,
+          orderId: orderId,
           userId: session,
           item: orderItems,
           address: address,
@@ -517,11 +507,12 @@ const userProfile = async (req, res, next) => {
           userId: session,
           $or: [
             { paymentType: "online" },
+            { paymentType: "wallet" },
             { admin_cancelled: false, user_cancelled: false },
           ],
         })
         .populate("item.product")
-        .sort({ date: -1 })
+        .sort({ orderCount: -1 })
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
@@ -566,7 +557,7 @@ const cancellOrder = async (req, res, next) => {
           { $set: { stock: newStockQuantity } }
         );
       }
-      if (order.paymentType === "online") {
+      if (order.paymentType === "online" || order.paymentType === "wallet") {
         let grandTotal = order.grandTotal;
         const userId = order.userId;
         const user = await User.findOne({ _id: userId });
@@ -581,7 +572,7 @@ const cancellOrder = async (req, res, next) => {
     }
 
     if (refunded === false) {
-      if (order.paymentType === "online") {
+      if (order.paymentType === "online" || order.paymentType === "wallet") {
         let grandTotal = order.grandTotal;
         const userId = order.userId;
         const user = await User.findOne({ _id: userId });
@@ -653,7 +644,7 @@ const loadEditProfile = async (req, res, next) => {
 const editProfile = async (req, res, next) => {
   try {
     const data = req.body;
-    
+
     const id = req.session.user_id;
     if (req.file) {
       await User.updateOne(
@@ -661,29 +652,35 @@ const editProfile = async (req, res, next) => {
         { $set: { image: req.file.filename } }
       );
     }
-    if (!data.username && !data.address && !data.city && !data.district  && !data.state   && !data.country) {
-      res.redirect('/editProfile')
-      msg = 'Fill all the fields'
-  } else if (!data.username || data.username.trim().length < 3) {
-      res.redirect('/editProfile')
-      msg = 'Enter valid name'
-  } else if (!data.address || data.address.trim().length < 3) {
-      res.redirect('/editProfile')
-      msg = 'Enter Valid Address'
-  } else if (!data.city || data.city.trim().length < 3) {
-      res.redirect('/editProfile')
-      msg = 'Enter Valid City'
-  } else if (!data.district || data.district.trim().length < 3) {
-      res.redirect('/editProfile')
-      msg = 'Enter Valid District'
-  } else if (!data.state || data.state.trim().length < 3) {
-      res.redirect('/editProfile')
-      msg = 'Enter Valid State'
-  }  else if (regex_mobile.test(data.phone) == false) {
-      res.redirect('/editProfile')
-      msg = 'Enter valid phone number'
-  }
-        else {
+    if (
+      !data.username &&
+      !data.address &&
+      !data.city &&
+      !data.district &&
+      !data.state &&
+      !data.country
+    ) {
+      res.redirect("/editProfile");
+      msg = "Fill all the fields";
+    } else if (!data.username || data.username.trim().length < 3) {
+      res.redirect("/editProfile");
+      msg = "Enter valid name";
+    } else if (!data.address || data.address.trim().length < 3) {
+      res.redirect("/editProfile");
+      msg = "Enter Valid Address";
+    } else if (!data.city || data.city.trim().length < 3) {
+      res.redirect("/editProfile");
+      msg = "Enter Valid City";
+    } else if (!data.district || data.district.trim().length < 3) {
+      res.redirect("/editProfile");
+      msg = "Enter Valid District";
+    } else if (!data.state || data.state.trim().length < 3) {
+      res.redirect("/editProfile");
+      msg = "Enter Valid State";
+    } else if (regex_mobile.test(data.phone) == false) {
+      res.redirect("/editProfile");
+      msg = "Enter valid phone number";
+    } else {
       await User.updateOne(
         { _id: mongoose.Types.ObjectId(id) },
         {
@@ -778,8 +775,8 @@ const address = async (req, res, next) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: new Object(session) });
 
-    res.render("address", { session, userData,message });
-    message=null;
+    res.render("address", { session, userData, message });
+    message = null;
   } catch (error) {
     console.log(error);
     next(error.message);
@@ -907,7 +904,6 @@ const addtocart = async (req, res, next) => {
           .findOne({ userId: session })
           .populate("item.product");
         const coupons = await couponSchema.find();
-        console.log(coupons);
         res.render("addToCart", {
           session,
           userData,
@@ -1230,7 +1226,6 @@ const decrementCart = async (req, res, next) => {
           }
         );
         const updateCart = await cartSchema.findOne({ userId: userId });
-        console.log(updateCart);
         let discount;
         if (updateCart && updateCart.coupons && updateCart.coupons.length > 0) {
           const amt = updateCart.coupons[0].minAmount;
@@ -1312,7 +1307,6 @@ const addingTOWishlist = async (req, res, next) => {
     const itemIndex = user.wishlist.findIndex((item) =>
       item._id.equals(mongoose.Types.ObjectId(productId))
     );
-    console.log(itemIndex);
     if (itemIndex >= 0) {
       // item already exists in wishlist
       res.redirect("/wishList");
@@ -1373,26 +1367,23 @@ const checkout = async (req, res) => {
 
 //////Delete Address/////
 
-
 const deleteAddress = async (req, res, next) => {
   try {
     const userId = req.session.user_id;
     const index = req.query.index;
     const userData = await User.findOne({ _id: new Object(userId) });
-    console.log(userData.address[index]);
     // Remove the address at the specified index position
     userData.address.splice(index, 1);
 
     // Save the updated userData to the database
     await userData.save();
-    message='Address Deleted'
+    message = "Address Deleted";
     res.redirect("/address");
   } catch (error) {
     console.log(error.message);
     next(error.message);
   }
 };
-
 
 /////Coupon Checking/////
 
@@ -1576,12 +1567,12 @@ const orderPlaced = async (req, res, next) => {
       if (wallet >= cart.GrandTotal) {
         orderStatus = 1;
 
-        res.redirect("/userProfile?payment=online&wallet=wallet");
+        res.redirect("/userProfile?payment=wallet&wallet=wallet");
         message = "Your order started shipping";
       } else {
         mssg = "No Sufficient Balance";
         res.redirect("/paymentPage");
-        message=null;
+        message = null;
       }
     }
   } catch (error) {
@@ -1638,10 +1629,10 @@ const razorpay = async (req, res, next) => {
 
     const orderId = `MF-${year}${month}${day}-${randomStr}${num}`;
     return orderId;
-  }
+  };
   const orderId = generateOrderId();
   const order = new orderSchema({
-    orderId:orderId,
+    orderId: orderId,
     userId: session,
     item: orderItems,
     address: address,
@@ -1654,7 +1645,7 @@ const razorpay = async (req, res, next) => {
   });
   await order.save();
   await cartSchema.deleteMany({ userId: session });
-  message='Order Placed'
+  message = "Order Placed";
   res.redirect("/userProfile");
 };
 
@@ -1812,7 +1803,6 @@ const ordersView = async (req, res, next) => {
     const orders = await orderSchema
       .findOne({ _id: orderId })
       .populate("item.product");
-    console.log(orders);
     res.render("ordersView", { session, orders, userData, orderId });
   } catch (error) {
     console.log(error.message);
@@ -1876,7 +1866,6 @@ const filterPrice = async (req, res, next) => {
 
     const { categorys, search, filterprice, sort } = req.body;
     const sortOption = sort === "priceHighToLow" ? { price: -1 } : { price: 1 };
-    console.log(search);
     const query = {
       unlisted: 0,
     };
@@ -1905,7 +1894,6 @@ const filterPrice = async (req, res, next) => {
       .find(query)
       .populate("category")
       .sort(sortOption);
-
     Categorys = categorys.filter((value) => {
       return value !== null;
     });
@@ -1937,84 +1925,85 @@ const contactus = async (req, res, next) => {
   try {
     let session = req.session.user_id;
     const userData = await User.findOne({ _id: new Object(session) });
-
-    res.render("contactus", { session, userData,msg,message });
-    msg=null
-    message=null
+    res.render("contactus", { session, userData, msg, message });
+    msg = null;
+    message = null;
   } catch (error) {
     console.log(error.message);
     next(error.message);
   }
 };
-
 const sendMessage = async (req, res) => {
   try {
-      let messageBody=req.body
-      if(messageBody.name==undefined||messageBody.message==undefined){
-        res.redirect('back')
+    let messageBody = req.body;
+    if (messageBody.name == undefined || messageBody.message == undefined) {
+      res.redirect("back");
+      const mailtransport = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "codershafinsha@gmail.com",
+          pass: process.env.EMAILPASS,
+        },
+      });
+      let details = {
+        from: messageBody.email,
+        to: "codershafinsha@gmail.com",
+        subject: "MaleFashion Subscription",
+        text: `
+              Email: ${messageBody.email}`,
+      };
+      mailtransport.sendMail(details, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("success");
+        }
+      });
+    }
+    if (
+      req.body.name.trim().length == 0 ||
+      req.body.email.trim().length == 0 ||
+      req.body.message.trim().length == 0
+    ) {
+      res.redirect("/contactus");
+      msg = "Please fill the fields";
+    } else {
+      if (messageBody) {
+        res.redirect("/contactus");
+        message = "Message Sent";
         const mailtransport = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: 'codershafinsha@gmail.com',
-                pass: process.env.EMAILPASS
-            },
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: "codershafinsha@gmail.com",
+            pass: process.env.EMAILPASS,
+          },
         });
         let details = {
-            from: messageBody.email,
-            to: "codershafinsha@gmail.com",
-            subject: "MaleFashion Subscription",
-            text:`
-            Email: ${messageBody.email}`
-        }
-        mailtransport.sendMail(details, (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("success");
-            }
-        })
-      }
-      if (req.body.name.trim().length == 0 || req.body.email.trim().length == 0 || req.body.message.trim().length == 0) {
-          res.redirect('/contactus')
-          msg = 'Please fill the fields'
-      } else {
-          if (messageBody) {
-              res.redirect('/contactus')
-              message = 'Message Sent'
-              const mailtransport = nodemailer.createTransport({
-                  host: 'smtp.gmail.com',
-                  port: 465,
-                  secure: true,
-                  auth: {
-                      user: 'codershafinsha@gmail.com',
-                      pass: process.env.EMAILPASS
-                  },
-              });
-              let details = {
-                  from: messageBody.email,
-                  to: "codershafinsha@gmail.com",
-                  subject: "MaleFashion User",
-                  text:`
+          from: messageBody.email,
+          to: "codershafinsha@gmail.com",
+          subject: "MaleFashion User",
+          text: `
                   Name: ${messageBody.name}
                   Email: ${messageBody.email}
-                  Message: ${messageBody.message}`
-              }
-              mailtransport.sendMail(details, (err) => {
-                  if (err) {
-                      console.log(err);
-                  } else {
-                      console.log("success");
-                  }
-              })
+                  Message: ${messageBody.message}`,
+        };
+        mailtransport.sendMail(details, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("success");
           }
+        });
       }
-
+    }
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
+};
 /////returnPolicy////
 const returnPolicy = async (req, res, next) => {
   try {
@@ -2076,5 +2065,5 @@ module.exports = {
   razorpay,
   razorpayConfirm,
   sendMessage,
-  returnPolicy
+  returnPolicy,
 };
