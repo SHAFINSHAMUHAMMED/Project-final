@@ -27,6 +27,9 @@ const salesSchema = new mongoose.Schema({
   totalItemsSold: {
     type: Number,
     required: true
+  },
+  orderId: {
+    type: String
   }
 });
 

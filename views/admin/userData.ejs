@@ -139,11 +139,18 @@
                             </thead>
 
                             <tbody>
-                                <% if(users.length>0){
-                                    for(let i=0;i<users.length;i++){ %>
+                              
+                              
+                                <% if(users.length>0){%>
+                                  <%let x%>
+                            
+                            
+                              <%x=(page-1)*5%>
+                                  <%  for(let i=0;i<users.length;i++){ %>
+                                      <%x+=1%>
                                         <tr scope="row">
                                             <td>
-                                                <%=i+1%>
+                                                <%=x%>
                                             </td>
                                             <td>
                                                 <%=users[i].username%>
@@ -176,6 +183,9 @@
                                             <% } %>
                             </tbody>
                         </table>
+                        <%for(let j=1;j<=totalPages;j++){%>
+                     <a class="text-white btn-sm btn-secondary" href="?page=<%=j%>"><%=j%></a>
+                    <%}%>
                     </div>
                 </div>
             </div>

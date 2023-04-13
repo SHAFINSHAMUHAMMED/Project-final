@@ -236,21 +236,23 @@
                     </div>
                 </div>
                 <div class="col-12 p-3">
-                        <form method="POST" action="/add-money" class="d-flex justify-content-center">
-                            <div class=""><h6 class="mb-2">Enter amount to add to wallet</h6>
-                              <div class="d-flex justify-content-center">
-                              <div class="">
-                                <input class=" mt-1" type="number" style="height: 40px; width: 100px;" name="amount" placeholder="">
-                            </div><div>
-                                <button type="submit"  style="height: 40px;" class="btn btn-outline-info mt-1 ms-1 ">
-                                  Add money
-                              </button> </div>
-                            </div>
-                             </div>
-                            <div class="  ">
-                                
-                            </div>
-                        </form>
+                  <form method="POST" action="/add-money" id="walletform" class="d-flex justify-content-center">
+                    <div class="">
+                      <div class="text-danger error-message"></div>
+                      <h6 class="mb-2">Enter amount to add to wallet</h6>
+                      <div class="d-flex justify-content-center">
+                        <div class="">
+                          <input id="amountt" class=" mt-1 text-center" type="number" style="height: 40px; width: 100px;" name="amount" placeholder="">
+                        </div>
+                        <div>
+                          <button type="submit" style="height: 40px;" class="btn btn-outline-info mt-1 ms-1">
+                            Add money
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                   
+                  </form>
                 </div>
             </div>
         </div>
@@ -282,9 +284,9 @@
                   class="d-md-flex d-none justify-content-md-between justify-content-sm-center align-content-center border-bottom border-2 my-2 bg-dark text-light  rounded-3">
                  
                   <div class="col-2 align-self-center ps-3 ms-2 mt-1">
-                    <h1 class="h6 fs-15">Order ID</h1>
+                    <h1 class="h6 " style="font-size: 14px;">Order ID</h1>
                   </div>
-                  <div class="col-3 d-flex justify-content-center ps- mt-2">
+                  <div class="col-3 d-flex justify-content-center ms-4 mt-2">
                     <h1 class="h6 fs-15 ">Date of Order</h1>
                   </div>
                   <div class="col-3 d-flex justify-content-center ps- mt-2">
@@ -303,7 +305,7 @@
                     </div>
                     <div class="col-md-4 text-sm-center text-md-start align-self-center my-2">
                       <% let date = new Date(orders[i].date); %>
-                      <% let formattedDate = date.toLocaleString(); %>
+                      <% let formattedDate = date.toLocaleDateString(); %>
                       <h1 class="h6"><%= formattedDate %></h1>
                     </div>
 
@@ -313,7 +315,7 @@
                         <%if(orders[i].admin_cancelled==true||orders[i].user_cancelled==true){%>
                           <%if(orders[i].paymentType=='online'){ %>
                       <div class="col-md-2 text-sm-center text-md-start align-self-center" style="margin-right: 2vh;" > <a
-                        class="btn btn-outline-dark btn-danger" style="width: 12vh;" href="#">Cancelled</a> </div>
+                        class="btn btn-outline-dark btn-danger" style="width: 12vh;" href="#"><span style="position: relative;right: 7%;"> Cancelled</span></a> </div>
                           <%}%>
                      <%}else if (orders[i].is_delivered==false &&orders[i].is_confirmed==true){%>
                     <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
@@ -321,11 +323,11 @@
                 
                   <%}else if (orders[i].is_delivered==true &&orders[i].return==false){%>
                     <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                        class="btn btn-success w-" style="width: 12vh;" href="#">Delivered</a> </div>
+                        class="btn btn-success " style="width: 12vh;" href="#"><span style="position: relative; right: 3%;"> Delivered</span></a> </div>
                     
                       <%}else if(orders[i].return==true&&orders[i].admin_reject===2){ %>
                         <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                          class="btn btn-warning w-" style="width: 12vh;" href="#">Returned</a> </div>
+                          class="btn btn-warning me-2" style="width: 12vh; " href="#"><span style="position: relative; right: 5%;"> Returned</span></a> </div>
 
                         <%}else if (orders[i].return==true&&orders[i].admin_reject===1){%>
                         <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
@@ -370,5 +372,23 @@
       });
     </script>
     <%}%>
+
+    <script>
+  const form = document.getElementById('walletform');
+  const amountInput = document.getElementById('amountt');
+  const errorMessage = document.querySelector('.error-message');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const amount = parseFloat(amountInput.value);
+
+    if (amount < 10) {
+      errorMessage.innerText = 'Add Minimum 10₹';
+    } else {
+      // Submit the form if the amount is valid
+      form.submit();
+    }
+  }); 
+    </script>
       <%- include('../layouts/commonfooter.ejs',{session}) %>
       <%- include('../layouts/footer.ejs') %>

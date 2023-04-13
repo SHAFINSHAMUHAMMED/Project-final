@@ -1525,7 +1525,7 @@ const orderPlaced = async (req, res, next) => {
       message = "Your order started shipping";
     } else if (payment.radiovalue == "online") {
       {
-        const returnURL = `http://localhost:3000/success?total=${grandTotal}`;
+        const returnURL = `https://malefashion.shop/success?total=${grandTotal}`;
 
         const create_payment_json = {
           intent: "sale",
@@ -1535,7 +1535,7 @@ const orderPlaced = async (req, res, next) => {
           redirect_urls: {
             return_url: returnURL,
             cancel_url:
-              "http://localhost:3000/paymentPage?message=Payment%20cancelled",
+              "https://malefashion.shop/paymentPage?message=Payment%20cancelled",
           },
           transactions: [
             {
@@ -1704,7 +1704,7 @@ const addmoney = async (req, res, next) => {
   const session = req.session.user_id;
   const amount = parseFloat(req.body.amount);
   try {
-    const returnURL = `http://localhost:3000/addtowallet?total=${amount}&session=${session}`;
+    const returnURL = `https://malefashion.shop/addtowallet?total=${amount}&session=${session}`;
 
     const create_payment_json = {
       intent: "SALE",
@@ -1714,7 +1714,7 @@ const addmoney = async (req, res, next) => {
       redirect_urls: {
         return_url: returnURL,
         cancel_url:
-          "http://localhost:3000/userProfile?message=Payment%20cancelled",
+          "https://malefashion.shop/userProfile?message=Payment%20cancelled",
       },
       transactions: [
         {

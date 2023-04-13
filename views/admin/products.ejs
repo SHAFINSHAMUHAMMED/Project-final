@@ -179,12 +179,7 @@
                                             <a href="/admin/editProduct?id=<%=product[i]._id%>"><button type="button"
                                                     class=" btn-primary me-1 d-flex justify-content-center  " style="width: 60px; height: 30px;"> <span class="mt-1">Edit</span> </button></a>
                                                   </div>
-   <div>                                                    
-  <form action="/admin/deleteProduct" method="post" id="deleteProduct_<%=product[i]._id%>">
-    <input type="hidden" name="delete" value="<%=product[i]._id%>">
-    <button class=" btn-danger  d-flex justify-content-center delete-button me-1" type="submit"  data-product-id="<%=product[i]._id%>"  style="width: 60px; height: 30px;"> <span class="mt-1">Delete</span> </button>
-  </form>
-</div>
+  
                                           <div>
                                            <%if(product[i].unlisted===0){%>
     

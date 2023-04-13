@@ -202,11 +202,11 @@ form.addEventListener('submit', function(event) {
     errorElement.textContent = 'Please enter a valid state.';
   } 
   
-  if (zipInput.value.trim() === '' || !/^\d{5,6}$/.test(zipInput.value.trim())) {
+  if (zipInput.value.trim().length === '' || !/^\d{5,6}$/.test(zipInput.value.trim())) {
     isValid = false;
     errorElement.textContent = 'Please enter a valid zip code.';
   }
-  if (phoneInput.value.trim() !== '' && !/^\d{10}$/.test(phoneInput.value.trim())) {
+  if (phoneInput.value.trim().length !== '' && !/^\d{10}$/.test(phoneInput.value.trim())) {
     isValid = false;
     errorElement.textContent = 'Please enter a valid phone number.';
   } 

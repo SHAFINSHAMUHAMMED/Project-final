@@ -405,6 +405,7 @@ crossorigin="anonymous"></script>
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Order Id</th>
                         <th>Customer</th>
 						<th>Location</th>
 						<th>Order Date</th>						
@@ -418,6 +419,7 @@ crossorigin="anonymous"></script>
                             <tr>
                                
                                 <td><%=i%></td>
+                                <td><%=sales.orderId%></td>
                                 <td><%=sales.userId.username%></td>
                                 <td><%=sales.location%></td>
                                 <td><%=sales.date.toDateString()%></td>                        
@@ -434,15 +436,18 @@ crossorigin="anonymous"></script>
                     
                 </tbody>
             </table>
-			<!-- <div class="clearfix">
-                <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                <ul class="pagination">
-                    <li class="page-item disabled"><a href="#">Previous</a></li>
+			<div class="clearfix">
+        <%for(let j=1;j<=totalPages;j++){%>
+                <!-- <div class="hint-text">Showing <b><%=j%></b> out of <b><%=count %>></b> entries</div>
+                <ul class="pagination"> -->
+                  <a class="text-white btn-sm btn-secondary" href="?page=<%=j%>"><%=j%></a>
+                    <!-- <li class="page-item disabled"><a href="#">Previous</a></li>
                     <li class="page-item"><a href="#" class="page-link">1</a></li>
                     <li class="page-item active"><a href="#" class="page-link">2</a></li>
-                    <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                    <li class="page-item"><a href="#" class="page-link">Next</a></li> -->
                 </ul>
-            </div> -->
+                <% } %>
+            </div>
         </div>
     </div>     
 

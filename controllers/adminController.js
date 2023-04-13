@@ -210,7 +210,7 @@ const orders = async (req, res) => {
     .find()
     .populate("userId")
     .populate("item.product")
-    .sort({ date: -1 })
+    .sort({ orderCount: -1 })
     .limit(limit)
     .skip((page - 1) * limit)
     .exec();
@@ -219,9 +219,11 @@ const orders = async (req, res) => {
       orders,
       totalPages: Math.ceil(count / limit),
       page,
-      message
+      message,
+      messag
     });
     (message = null);
+    messag=null
   } catch (error) {
     console.log(error);
   }
@@ -231,20 +233,27 @@ const orders = async (req, res) => {
 
 const loadSalesPage = async (req, res) => {
   try {
-
+    var page=1;
+    if(req.query.page){
+      page=req.query.page
+    }
+    const limit=10;
     let filter = '';
     if (req.query.filter) {
       filter = req.query.filter;
     }
 
     let sales = [];
-    if(filter === 'all'){
+    let count = 0;
+    if (filter === 'all') {
       sales = await salesSchema.find({}).populate('userId')
-    }else if (filter === 'weekly') {
+        .limit(limit)
+        .skip((page-1)*limit)
+        .exec()
+      count = await salesSchema.countDocuments({});
+    } else if (filter === 'weekly') {
       const startOfWeek = moment().startOf('week').toDate();
       const endOfWeek = moment().endOf('week').toDate();
-
-      console.log(startOfWeek);
       sales = await salesSchema
         .find({
           date: {
@@ -252,24 +261,46 @@ const loadSalesPage = async (req, res) => {
             $lte: endOfWeek,
           },
         })
-        .populate('userId');
-      }else if(filter === 'yearly'){
-          const startOfYear = moment().startOf('year').toDate();
-          const endOfYear = moment().endOf('year').toDate();
+        .populate('userId')
+        .limit(limit)
+        .skip((page-1)*limit)
+        .exec()
+      count = await salesSchema.countDocuments({
+        date: {
+          $gte: startOfWeek,
+          $lte: endOfWeek,
+        },
+      });
+    } else if (filter === 'yearly') {
+      const startOfYear = moment().startOf('year').toDate();
+      const endOfYear = moment().endOf('year').toDate();
     
-          sales = await salesSchema
-            .find({
-              date: {
-                $gte: startOfYear,
-                $lte: endOfYear,
-              },
-            })
-            .populate('userId');
-      }else{
-          sales = await salesSchema.find().populate('userId')
-      }
-      console.log(sales.userId);
-    res.render('salesReport', { sales });
+      sales = await salesSchema
+        .find({
+          date: {
+            $gte: startOfYear,
+            $lte: endOfYear,
+          },
+        })
+        .populate('userId')
+        .limit(limit)
+        .skip((page-1)*limit)
+        .exec()
+      count = await salesSchema.countDocuments({
+        date: {
+          $gte: startOfYear,
+          $lte: endOfYear,
+        },
+      });
+    } else {
+      sales = await salesSchema.find().populate('userId')
+        .limit(limit)
+        .skip((page-1)*limit)
+        .exec()
+      count = await salesSchema.countDocuments({});
+    }
+    
+    res.render('salesReport', { sales,totalPages:Math.ceil(count/limit), count });
   } catch (error) {
     console.log(error.message);
   }
@@ -298,7 +329,7 @@ const loadUserData = async (req, res) => {
     if (req.query.page) {
       page = req.query.page;
     }
-    const limit = 4;
+    const limit = 5;
 
     const userData = await userSchema
       .find({
@@ -331,11 +362,11 @@ const loadUserData = async (req, res) => {
         userData[i].Status = "Blocked";
       }
     }
-    console.log(userData);
     res.render("userData", {
       users: userData,
       totalPages: Math.ceil(count / limit),
       currentPage: page,
+      page
     });
   } catch (error) {
     console.log(error);
@@ -480,7 +511,6 @@ const loadProducts = async (req, res) => {
         ],
       })
       .countDocuments();
-      console.log(products);
     res.render("products", {
       product: products,
       message,
@@ -829,7 +859,7 @@ const cancelOrder = async (req, res) => {
         { $set: { wallet: wallet + grandTotal } }
       );
     }
-    res.redirect("/admin/home");
+    res.redirect("/admin/orders");
     if (order.paymentType === "online") {
       messag = "Orderd canelled And Refunded";
     } else {
@@ -860,8 +890,8 @@ const acceptOrder = async (req, res) => {
       await product.save();
     }
 
-    res.redirect("/admin/home");
-    messag = "Return Rejected";
+    res.redirect("/admin/orders");
+    message = "Order confirmed";
   } catch (error) {
     console.log(error.message);
   }
@@ -870,6 +900,7 @@ const acceptOrder = async (req, res) => {
 ///Confirm Delivery/////
 
 const PDFDocument = require('pdfkit');
+const { count } = require("console");
 
 const acceptDelivery = async (req, res) => {
   try {
@@ -881,7 +912,7 @@ const acceptDelivery = async (req, res) => {
         {
           $set: {
             is_delivered: true,
-            delivered_date: new Date().toLocaleDateString(),
+            delivered_date: new Date(),
           },
         }
       );
@@ -965,6 +996,7 @@ const acceptDelivery = async (req, res) => {
           totalItemsSold: product.length,
           userId: updatedOrder.userId,
           location: updatedOrder.address[0].city,
+          orderId: updatedOrder.orderId
         });
         await newSalesReport.save();
       }
@@ -994,7 +1026,7 @@ const rejectReturn = async (req, res) => {
       { _id: orderId },
       { $set: { admin_reject: 1 } }
     );
-    res.redirect("/admin/home");
+    res.redirect("/admin/orders");
     messag = "Return Rejected";
   } catch (error) {
     console.log(error.message);
@@ -1037,8 +1069,8 @@ const acceptReturn = async (req, res) => {
       { $set: { wallet: wallet + grandTotal } }
     );
 
-    res.redirect("/admin/home");
-    messag = "Return accepted";
+    res.redirect("/admin/orders");
+    message = "Return accepted";
   } catch (error) {
     console.log(error.message);
   }
