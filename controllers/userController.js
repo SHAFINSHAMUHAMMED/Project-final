@@ -426,7 +426,6 @@ const userProfile = async (req, res, next) => {
       const day = ("0" + date.getDate()).slice(-2);
       const randomStr = Math.random().toString(36).substring(7).toUpperCase();
       const num = Math.floor(Math.random() * 90 + 10);
-
       const orderId = `MF-${year}${month}${day}-${randomStr}${num}`;
       return orderId;
     };
@@ -436,7 +435,6 @@ const userProfile = async (req, res, next) => {
       page = req.query.page;
     }
     req.session.order = null;
-
     ///message from razorpay///
     if (req.query.message) {
       const messageJSON = req.query.message;
@@ -516,7 +514,7 @@ const userProfile = async (req, res, next) => {
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
-      const count = await orderSchema.find().countDocuments();
+      const count = await orderSchema.find({ userId: session}).countDocuments();
       const userData = await User.findOne({ _id: new Object(session) });
 
       res.render("userProfile", {
@@ -1347,7 +1345,6 @@ const checkout = async (req, res) => {
   const cart = await cartSchema
     .findOne({ userId: session })
     .populate("item.product");
-  addressCount = userData.address[index];
   let address = userData.address;
   if (cart != null) {
     if (cart.item) {
@@ -1372,10 +1369,7 @@ const deleteAddress = async (req, res, next) => {
     const userId = req.session.user_id;
     const index = req.query.index;
     const userData = await User.findOne({ _id: new Object(userId) });
-    // Remove the address at the specified index position
     userData.address.splice(index, 1);
-
-    // Save the updated userData to the database
     await userData.save();
     message = "Address Deleted";
     res.redirect("/address");
@@ -1461,10 +1455,16 @@ let messa = "";
 let mssg;
 const payment = async (req, res, next) => {
   try {
-    const address = req.body;
     const session = req.session.user_id;
+    let address
+    if(req.body){
+     address = req.body;
+    }else{
+     let data= await User.findOne({_id:session})
+     address=data.address[0]
+    }
+    console.log(address);
     req.session.address = address;
-
     const userData = await User.findOne({ _id: new Object(session) });
     const pro = await cartSchema.findOne({ userId: session });
     let tax = pro.subtotal * (12 / 100);
@@ -1478,7 +1478,6 @@ const payment = async (req, res, next) => {
         },
       }
     );
-
     const wallet = userData.wallet;
     if (wallet < pro.GrandTotal) {
       mssg = "No Sufficient Balance";
@@ -1506,7 +1505,7 @@ const payment = async (req, res, next) => {
 
 const orderPlaced = async (req, res, next) => {
   try {
-    const session = req.session.user_id;
+    const session = req.session.user_id; 
     const payment = req.body;
     const cart = await cartSchema.findOne({ userId: session });
     const grandTotal = cart.GrandTotal;
@@ -2017,6 +2016,19 @@ const returnPolicy = async (req, res, next) => {
   }
 };
 
+//////faq////
+const faqs = async (req, res, next) => {
+  try {
+    let session = req.session.user_id;
+    const userData = await User.findOne({ _id: new Object(session) });
+
+    res.render("faq", { session, userData });
+  } catch (error) {
+    console.log(error.message);
+    next(error.message);
+  }
+};
+
 module.exports = {
   userSignup,
   insertUser,
@@ -2066,4 +2078,5 @@ module.exports = {
   razorpayConfirm,
   sendMessage,
   returnPolicy,
+  faqs
 };

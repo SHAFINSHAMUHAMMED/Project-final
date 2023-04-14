@@ -55,6 +55,14 @@
                     margin-right: 0;
                 }
             }
+            
+            @media screen and (max-width: 991px) {
+                .shop__sidebar {
+                    flex-direction: row;
+                    justify-content: space-around;
+                }
+                
+            }
         </style>
 
 
@@ -91,16 +99,16 @@
 
                             <div class="col-lg-12 col-md-12">
                                 <div class="shop__sidebar ">
-                                    <div class="sidebar__sizes">
+                                    <div class="sidebar__sizes sidebaar">
                                         <div class="section-title d-flex justify-content-start">
                                             <div class="">
-                                                <h4>Categories</h4>
+                                                <h4 style="font-size: 20px;">   Categories</h4>
                                             </div>
                                         </div>
                                         <%category.forEach(element=> {%>
                                             <div class="d-flex justify-content-between">
                                                 <div class="">
-                                                    <div class="form-check">
+                                                    <div class="form-check d-flex justify-content-between">
                                                         <input class="form-check-input" type="checkbox"
                                                             onclick="category('<%=element.category%>')"
                                                             name="<%=element.category%>" id="<%=element.category%>"
@@ -116,11 +124,11 @@
                                             <%})%>
                                     </div>
                                     <div class="sidebar__sizes">
-                                        <div class="section-title d-flex justify-content-start">
+                                      
                                             <div>
-                                                <h4>Shop by price</h4>
+                                                <h4 style="font-size: 20px; margin-bottom: 10px;">Price</h4>
                                             </div>
-                                        </div>
+                                       
                                         <style>
                                             .flex-container {
                                                 display: flex;
@@ -132,10 +140,10 @@
                                         <div class="flex-container">
                                             <div class="d-flex justify-content-between">
                                                 <div>
-                                                    <input onclick="price(4)" type="checkbox" value="5000" id="FOUR">
+                                                    <input class="" onclick="price(4)" type="checkbox" value="5000" id="FOUR">
                                                 </div>
                                                 <div>
-                                                    <label for="FOUR">
+                                                    <label for="FOUR" class="ms-2">
                                                         5000-above
                                                     </label>
                                                 </div>
@@ -147,7 +155,7 @@
                                                         id="THREE">
                                                 </div>
                                                 <div>
-                                                    <label for="THREE">
+                                                    <label for="THREE" class="ms-2">
                                                         2000-4999
                                                     </label>
                                                 </div>
@@ -159,7 +167,7 @@
                                                         id="TWO">
                                                 </div>
                                                 <div>
-                                                    <label for="TWO">
+                                                    <label for="TWO" class="ms-2">
                                                         1000-1999
                                                     </label>
                                                 </div>
@@ -170,7 +178,7 @@
                                                     <input onclick="price(1)" type="checkbox" value="0,999" id="ONE">
                                                 </div>
                                                 <div>
-                                                    <label for="ONE">
+                                                    <label for="ONE" class="ms-2">
                                                         0-999
                                                     </label>
                                                 </div>

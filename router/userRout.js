@@ -114,6 +114,8 @@ user_route.post('/message',auth.logOutSession,userController.sendMessage)
 
 user_route.get('/returnPolicy',userController.returnPolicy)
 
+user_route.get('/faqs',userController.faqs)
+
 user_route.get("*",function(req,res){res.render("errorpage")})
 
 

@@ -265,9 +265,10 @@ const loadSalesPage = async (req, res) => {
       sales = await salesSchema
         .find({})
         .populate("userId")
+        .sort({date:-1})
         .limit(limit)
         .skip((page - 1) * limit)
-        .exec();
+        .exec()
       count = await salesSchema.countDocuments({});
     } else if (filter === "weekly") {
       const startOfWeek = moment().startOf("week").toDate();
@@ -280,6 +281,7 @@ const loadSalesPage = async (req, res) => {
           },
         })
         .populate("userId")
+        .sort({date:-1})
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
@@ -301,6 +303,7 @@ const loadSalesPage = async (req, res) => {
           },
         })
         .populate("userId")
+        .sort({date:-1})
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
@@ -314,6 +317,7 @@ const loadSalesPage = async (req, res) => {
       sales = await salesSchema
         .find()
         .populate("userId")
+        .sort({date:-1})
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
@@ -323,7 +327,7 @@ const loadSalesPage = async (req, res) => {
     res.render("salesReport", {
       sales,
       totalPages: Math.ceil(count / limit),
-      count,
+      count,page
     });
   } catch (error) {
     console.log(error.message);
@@ -1129,10 +1133,13 @@ const CouponGenerate = async (req, res) => {
     if (coupon) {
       res.render("coupon", { message, coupon, msg });
       message = null;
+      msg=null;
+      messag=null;
     } else {
       res.render("coupon", { message, msg });
       message = null;
       msg = null;
+      messag=null;
     }
   } catch (error) {
     console.log(error);
