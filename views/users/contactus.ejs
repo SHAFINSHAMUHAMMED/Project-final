@@ -39,28 +39,65 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="contact__form">
 
-                            <form action="/message" method="post">
+                            <form action="/message" method="post" id="mess">
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <input name="name" type="text" placeholder="Name">
+                                    <input name="name" type="text" id="name" placeholder="Name">
                                 </div>
                                 <div class="col-lg-6">
-                                    <input name="email" type="text" placeholder="Email">
+                                    <input name="email" type="text" id="email" placeholder="Email">
                                 </div>
                                 <div class="col-lg-12">
-                                    <textarea name="message" placeholder="Message"></textarea>
+                                    <textarea name="message" id="messField" placeholder="Message"></textarea>
                                     <small class="text-danger"><% msg %></small>
                                     <button type="submit" class="site-btn">Send Message</button>
                                 </div>
                             </div>
                         </form>
                     </div>
+                    <small class="text-danger error">
+                    </small>
                 </div>
             </div>
         </div>
     </section>
     <!-- Contact Section End -->
 
+        <script>
+            // Get the form and the error element
+const form = document.getElementById('mess');
+const errorElement = document.querySelector('.error');
 
+// Add an event listener to the form on submit
+form.addEventListener('submit', (event) => {
+  // Prevent the default form submission behavior
+  event.preventDefault();
+
+  // Get the input values
+  const name = form.elements['name'].value;
+  const email = form.elements['email'].value;
+  const message = form.elements['message'].value;
+
+  // Validate the input values
+  if (!name) {
+    showError('Please enter your name');
+  } else if (!email) {
+    showError('Please enter your email');
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showError('Please enter a valid email');
+  } else if (!message) {
+    showError('Please enter your message');
+  } else {
+    // Submit the form if all inputs are valid
+    form.submit();
+  }
+});
+
+// Function to show error messages
+function showError(message) {
+  errorElement.textContent = message;
+}
+
+        </script>
     <%- include('../layouts/commonfooter.ejs',{session}) %>
         <%- include('../layouts/footer.ejs') %>

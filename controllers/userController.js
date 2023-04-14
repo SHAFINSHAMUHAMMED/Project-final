@@ -9,7 +9,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-
 const regex_password = /^(?=.*?[A-Z])(?=.*[a-z])(?=.*[0-9]){8,16}/gm;
 const regex_mobile = /^\d{10}$/;
 const paypal = require("paypal-rest-sdk");
@@ -20,7 +19,6 @@ paypal.configure({
   client_secret: process.env.PAYPALCLIENT_SCRT,
 });
 const Razorpay = require("razorpay");
-
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
   key_secret: process.env.RAZORPAY_PASS,
@@ -29,7 +27,6 @@ var instance = new Razorpay({
 let message, msg, mess;
 let orderStatus = 0;
 let addressCount;
-let session;
 
 //////////SECURE PASSWORD////////////
 
@@ -140,9 +137,7 @@ const insertUser = async (req, res, next) => {
         is_admin: 0,
       });
     }
-
     const userData = await user.save();
-
     if (userData) {
       sendVerifyMail(usd.username, usd.email, userData._id);
       res.redirect("/login");
@@ -235,7 +230,8 @@ const loginHome = async (req, res, next) => {
       const products = await productSchema.find({
         unlisted: 0,
         stock: { $gt: 0 },
-      });
+      })
+      .sort({_id:-1});
 
       if ((products.stock = 0)) {
         message = "Out Of Stock";
@@ -252,7 +248,8 @@ const loginHome = async (req, res, next) => {
       const products = await productSchema.find({
         unlisted: 0,
         stock: { $gt: 0 },
-      });
+      })
+      .sort({_id:-1});
       if ((products.stock = 0)) {
         message = "Out Of Stock";
       }
