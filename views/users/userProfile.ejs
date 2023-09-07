@@ -315,29 +315,29 @@
                         <%if(orders[i].admin_cancelled==true||orders[i].user_cancelled==true){%>
                           <%if(orders[i].paymentType=='online'){ %>
                       <div class="col-md-2 text-sm-center text-md-start align-self-center" style="margin-right: 2vh;" > <a
-                        class="btn btn-outline-dark btn-danger" style="width: 12vh;" href=""><span style="position: relative;right: 7%;"> Cancelled</span></a> </div>
+                        class="btn btn-outline-dark btn-danger" style="width: 90px;" href=""><span style="position: relative;right: 7%;"> Cancelled</span></a> </div>
                           <%}%>
                      <%}else if (orders[i].is_delivered==false &&orders[i].is_confirmed==true){%>
                     <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                        class="btn btn-success w-" style="width: 12vh;" href=""><span style="position: relative; right: 15%;"> Confirmed</span></a> </div>
+                        class="btn btn-success w-" style="width: 90px;" href=""><span style="position: relative; right: 15%;"> Confirmed</span></a> </div>
                 
                   <%}else if (orders[i].is_delivered==true &&orders[i].return==false){%>
                     <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                        class="btn btn-success " style="width: 12vh;" href=""><span style="position: relative; right: 8%;"> Delivered</span></a> </div>
+                        class="btn btn-success " style="width: 90px;" href=""><span style="position: relative; right: 1%;"> Delivered</span></a> </div>
                     
                       <%}else if(orders[i].return==true&&orders[i].admin_reject===2){ %>
                         <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                          class="btn btn-warning me-2" style="width: 12vh; " href=""><span style="position: relative; right: 5%;"> Returned</span></a> </div>
+                          class="btn btn-warning me-2" style="width: 90px; " href=""><span style="position: relative; right: 5%;"> Returned</span></a> </div>
 
                         <%}else if (orders[i].return==true&&orders[i].admin_reject===1){%>
                         <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                          class="btn btn-warning w-" style="width: 12vh;" href="">Return Rejected</a> </div>
+                          class="btn btn-warning w-" style="width: 90px;" href="">Return Rejected</a> </div>
                           <%} else if(orders[i].is_confirmed==false&&orders[i].admin_cancelled==false&&orders[i].user_cancelled==false){%>
                             <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                              class="btn btn-warning w-" style="width: 12vh;" href="">Pending</a> </div>
+                              class="btn btn-warning w-" style="width: 90px;" href="">Pending</a> </div>
                         <%} else{%>
                       <div class="col-md-2 text-sm-center text-md-start align-self-center " style="margin-right: 2vh;" > <a
-                        class="btn btn-warning w-" style="width: 12vh;" href="">Return</a> </div>
+                        class="btn btn-warning w-" style="width: 90px;" href="">Return</a> </div>
                     <%}%>
                   </div>
                   <%}%>
