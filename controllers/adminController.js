@@ -802,7 +802,7 @@ const addCategory = async (req, res) => {
     } else {
       const cat = await category.save();
       message = "Category Added";
-      res.redirect("/admin/Category");
+      res.redirect("/admin/category");
     }
   }
 };

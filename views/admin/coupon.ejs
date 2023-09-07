@@ -121,45 +121,42 @@
       </div>
     </nav>
 
-      <div class="col-11">
         <section>
           <div class="container-xl">
             <div class="row d-flex justify-content-center align-items-center">
               <!-- Column for adding coupon -->
-              <div class="col-12 col-md-6">
-                <div>
-                  <div class="text-center">
+                  <div class="text-center col-6 col-md-12">
                     <small class="text-danger error"></small>
                     <div id="error-message"></div>
                     <br><br>
                     <form action="/admin/addCoupon" method="post">
                       <label for="" class="fw-bold">Add Coupons</label>
-                      <div class="row">
-                        <div class="col-12">
+                      <div class="row justify-content-center">
+                        <div class="col-8">
                           <label for="couponId">Coupon ID:</label>
-                          <input type="text" id="couponId" name="couponId" class="form-control" >
+                          <input type="text" id="couponId" name="couponId" class="form-control" required >
                         </div>
-                        <div class="col-12">
+                        <div class="col-8">
                           <label for="expiryDate">Expiry Date:</label>
-                          <input type="date" id="expiryDate" name="expiryDate" class="form-control text-center text-uppercase" >
+                          <input type="date" id="expiryDate" name="expiryDate" class="form-control text-center text-uppercase" required >
                         </div>
-                        <div class="col-12">
+                        <div class="col-8">
                           <label for="items">No of Coupon:</label>
-                          <input type="number" id="items" name="items" class="form-control" >
+                          <input type="number" id="items" name="items" class="form-control" required >
                         </div>
-                        <div class="col-12">
+                        <div class="col-8">
                           <label for="minAmount">Minimum Amount:</label>
-                          <input type="number" id="minAmount" name="minAmount" class="form-control" >
+                          <input type="number" id="minAmount" name="minAmount" class="form-control" required >
                         </div>
-                        <div class="col-12">
+                        <div class="col-8">
                           <label for="maxAmount">Maximum Discount:</label>
-                          <input type="number" id="maxAmount" name="maxAmount" class="form-control" >
+                          <input type="number" id="maxAmount" name="maxAmount" class="form-control" required >
                         </div>
-                        <div class="col-12">
+                        <div class="col-8">
                           <label for="discount">Discount %:</label>
-                          <input type="number" id="discount" name="discount" class="form-control" >
+                          <input type="number" id="discount" name="discount" class="form-control" required >
                         </div>
-                        <div class="col-12 mt-3">
+                        <div class="col-8 mt-3">
                           <div class="d-grid gap-2 mx-auto">
                             <button class="btn btn-secondary" type="submit">Add</button>
                           </div>
@@ -167,13 +164,9 @@
                       </div>
                     </form>
                   </div>
-                </div>
-              </div>
               <!-- Column for showing added coupons -->
-              <div class="col-12 col-md-6">
-                <div>
+              <div class="col-12 col-md-12 mt-3">
                   <!-- Your code to display added coupons goes here -->
-                  <div class="container">
                     <!-- row -->
                     
                         <div class="col-12 tm-block-col">
@@ -243,14 +236,10 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
-
-                </div>
               </div>
             </div>
           </div>
         </section>
-      </div>
       
 
       
