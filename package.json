@@ -31,7 +31,7 @@
     "paypal-rest-sdk": "^1.8.1",
     "pdfkit": "^0.13.0",
     "pdfkit-table": "^0.1.99",
-    "razorpay": "^2.8.6",
+    "razorpay": "^2.9.2",
     "regex": "^0.1.1",
     "sharp": "^0.31.3",
     "sweetalert2": "^11.4.8",
