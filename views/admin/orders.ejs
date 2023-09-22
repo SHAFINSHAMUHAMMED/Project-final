@@ -192,7 +192,7 @@
                                   </td>
                                   <td><b><%=new Date(orders[i].date).toLocaleDateString()%></b></td>
 
-                                  <td><b><%=orders[i].userId.username%></b></td>
+                                  <td><b><%=orders[i]?.userId?.username%></b></td>
                                   <td><b><%= orders[i].address[0].city %></b></td>
                                   <td><b><%= orders[i].paymentType %></b></td>
                                   <td><a href="/admin/viewOrder?orderid=<%=orders[i]._id%>"><button class=" btn-secondary btn-sm rounded-pill" style="width: 70px; height: 30px;">View</button></a></td>
