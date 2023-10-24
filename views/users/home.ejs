@@ -4,15 +4,9 @@
     <div id="preloder">
         <div class="loader"></div>
     </div>
-
-    
-
-        
-
-
         <section class="hero">
             <div class="hero__slider owl-carousel">
-                <div class="hero__items set-bg" data-setbg="proImage/temp/<%=banner.image[0]%>">
+                <div class="hero__items set-bg" data-setbg="<%= banner?.image[0] ? 'img/banner/' + banner.image[0] : '/img/banner/test1.jpg' %>">
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-5 col-lg-7 col-md-8">
@@ -34,7 +28,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="hero__items set-bg" data-setbg="proImage/temp/<%=banner.image[1]%>">
+                <div class="hero__items set-bg" data-setbg="<%= banner?.image[1] ? 'img/banner/' + banner.image[1] : '/img/banner/test2.jpg' %>">
+      
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-5 col-lg-7 col-md-8">

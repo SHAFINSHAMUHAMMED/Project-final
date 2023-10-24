@@ -964,7 +964,7 @@ const addingToCart = async (req, res, next) => {
           );
           if (item) {
             if (item.quantity >= product.stock) {
-              const msg = "item out of stock";
+               msg = "item out of stock";
               return res.redirect("/addToCart");
             } else {
               await cartSchema.updateOne(
@@ -1893,6 +1893,7 @@ const filterPrice = async (req, res, next) => {
     Categorys = categorys.filter((value) => {
       return value !== null;
     });
+    console.log(Categorys);
 
     if (Categorys[0]) {
       Categorys.forEach((element, i) => {
