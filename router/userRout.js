@@ -119,6 +119,4 @@ user_route.get('/faqs',userController.faqs)
 user_route.get("*",function(req,res){res.render("errorpage")})
 
 
-
-
 module.exports = user_route

@@ -320,7 +320,7 @@ const otppage = async (req, res, next) => {
 //////////OTP GENERATION///////////
 
 function otpgen() {
-  OTP = Math.random() * 1000000;
+let  OTP = Math.random() * 1000000;
   OTP = Math.floor(OTP);
   return OTP;
 }

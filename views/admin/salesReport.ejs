@@ -414,16 +414,16 @@ crossorigin="anonymous"></script>
                   <%let x%>
                   <%x=(page-1)*10%>
                     <%if(sales!=0){%>
-                        <%sales.forEach(sales => {%>
+                        <%sales?.forEach(sales => {%>
                           <%x+=1%>
                             <tr>
                                
                                 <td><%=x%></td>
-                                <td><%=sales.orderId%></td>
-                                <td><%=sales.userId.username%></td>
-                                <td><%=sales.location%></td>
-                                <td><%=sales.date.toDateString()%></td>                        
-                                <td><%=sales.totalSales%></td>
+                                <td><%=sales?.orderId%></td>
+                                <td><%=sales?.userId?.username%></td>
+                                <td><%=sales?.location%></td>
+                                <td><%=sales?.date?.toDateString()%></td>                        
+                                <td><%=sales?.totalSales%></td>
                             </tr>
                         <%})%>
                         

@@ -32,13 +32,13 @@ const adminLogin = async (req, res) => {
     const adminMail = req.body.email;
     const pass = req.body.password;
     const adminData = await userSchema.findOne({ email: adminMail });
-
     if (adminMail.trim().length == 0 || pass.trim().length == 0) {
       res.redirect("/admin");
       msg = "Please fill all the forms";
     } else {
       if (adminData) {
         const comparePassword = await bcrypt.compare(pass, adminData.password);
+        console.log(comparePassword);
         if (comparePassword) {
           if (adminData.is_admin == 1) {
             req.session.admin_id = adminData._id;
@@ -802,7 +802,7 @@ const addCategory = async (req, res) => {
     } else {
       const cat = await category.save();
       message = "Category Added";
-      res.redirect("/admin/Category");
+      res.redirect("/admin/category");
     }
   }
 };
